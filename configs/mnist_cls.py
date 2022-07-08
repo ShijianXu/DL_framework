@@ -4,6 +4,7 @@ from torchvision import datasets, transforms
 
 import models.model_classifier
 
+# Model part
 backbone = {}
 backbone["name"] = "models.backbone_mlp.MLP"
 backbone["config"] = {
@@ -29,7 +30,7 @@ model_config = {
 model = models.model_classifier.CLS_Model(**model_config)
 print("Model init.")
 
-
+# Data part
 transform=transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.1307,), (0.3081,))
@@ -37,7 +38,13 @@ transform=transforms.Compose([
 
 train_dataset = datasets.MNIST('data', train=True, download=True, transform=transform)
 train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=8, shuffle=True)
-    
+print("Construct train dataset with {} samples".format(len(train_dataset)))
+
 test_dataset = datasets.MNIST('data', train=False, transform=transform)
 test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=4, shuffle=True)
-print("Dataset init.")
+print("Construct test dataset with {} samples".format(len(test_dataset)))
+
+# Loss and training part
+learning_rate = 0.001
+loss = torch.nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters, learning_rate)
