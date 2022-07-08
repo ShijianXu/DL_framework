@@ -3,25 +3,24 @@ from torch.utils.data import DataLoader
 
 import torchvision
 import torchvision.transforms as transforms
-from torchvision import datasets
 
 import models.model_classifier
 
 # Model part
 backbone = {}
-backbone["name"] = "models.backbone_mlp.MLP"
+backbone["name"] = "models.backbone_cnn.CNN"
 backbone["config"] = {
-    "input_dim": 784,
-    "num_layers": 4,
-    "num_hiddens": [512, 256, 128, 64],
-    "activation": "relu"
+    "input_channels": 3,
+    "output_channels": 16
 }
 
 backend = {}
 backend["name"] = "models.backend_cls.Classifier"
 backend["config"] = {
-    "input_dim": 64,
-    "output_dim": 10
+    "input_dim": 16*5*5,
+    "output_dim": 10,
+    "num_layers": 3,
+    "num_hiddens": [120, 84]
 }
 
 model_config = {
@@ -36,10 +35,10 @@ print("Model init.")
 # Data part
 transform=transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize((0.1307,), (0.3081,))
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
-train_dataset = datasets.MNIST('data', train=True, download=True, transform=transform)
+train_dataset = torchvision.datasets.CIFAR10('data', train=True, download=True, transform=transform)
 train_dataloader = DataLoader(
     train_dataset, 
     batch_size=8, 
@@ -48,7 +47,7 @@ train_dataloader = DataLoader(
 )
 print("Construct train dataset with {} samples".format(len(train_dataset)))
 
-test_dataset = datasets.MNIST('data', train=False, transform=transform)
+test_dataset = torchvision.datasets.CIFAR10('data', train=False, download=True, transform=transform)
 test_dataloader = DataLoader(
     test_dataset, 
     batch_size=4, 
@@ -61,3 +60,4 @@ print("Construct test dataset with {} samples".format(len(test_dataset)))
 learning_rate = 0.001
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
+num_epochs = 2

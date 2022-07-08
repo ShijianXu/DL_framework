@@ -19,7 +19,7 @@ class MLP(nn.Module):
             layers.append(nn.Linear(num_hiddens[i], num_hiddens[i+1]))
             layers.append(nn.ReLU())
 
-        self.layers = nn.ModuleList(layers)
+        self.layers = nn.Sequential(*layers)
 
     def forward(self, x):
         out = self.layers(x)
