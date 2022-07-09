@@ -28,3 +28,6 @@ class CLS_Model(nn.Module):
         x = self.backbone(x)
         out = self.backend(x)
         return out
+
+    def accuracy(self, output, target):
+        pass
