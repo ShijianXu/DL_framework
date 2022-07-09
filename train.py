@@ -9,10 +9,13 @@ if __name__ == '__main__':
         "--config", required=True, type=str, help="The config file."
     )
     parser.add_argument(
-        "--log", type=str, help="Path to log."
+        "--log", type=str, default='./logs', help="Path to log."
     )
     parser.add_argument(
         "--resume", type=str, help="Path to the resumed checkpoint."
+    )
+    parser.add_argument(
+        "--print_freq", type=int, default=400, help="Loss print frequency."
     )
 
     args = parser.parse_args()
@@ -25,10 +28,13 @@ if __name__ == '__main__':
         exec(config_src, config.__dict__)
 
     trainer = Trainer(
+        config=config,
         model=config.model,
         dataloader=config.train_dataloader,
         criterion=config.loss,
         optimizer=config.optimizer,
-        epochs=config.num_epochs
+        epochs=config.num_epochs,
+        print_freq=args.print_freq,
+        log_dir=args.log,
     )
     trainer.train()
