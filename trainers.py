@@ -27,7 +27,7 @@ class Trainer(object):
     def train(self):
         for epoch in range(self.epochs):
             losses_m = utils.AverageMeter()
-            for batch_idx, batch in enumerate(self.dataloader, 0):
+            for batch_idx, batch in enumerate(tqdm(self.dataloader)):
                 self.process_batch(batch, losses_m)
 
                 if batch_idx % self.print_freq == 0:
