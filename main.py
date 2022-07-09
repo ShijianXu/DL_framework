@@ -38,7 +38,8 @@ if __name__ == '__main__':
         trainer = Trainer(
             config=config,
             model=config.model,
-            dataloader=config.train_dataloader,
+            train_dataloader=config.train_dataloader,
+            val_dataloader=config.test_dataloader,
             criterion=config.loss,
             optimizer=config.optimizer,
             epochs=config.num_epochs,

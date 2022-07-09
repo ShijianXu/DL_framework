@@ -14,7 +14,7 @@ class CLS_Model(nn.Module):
         self.backbone = CLS_Model.build_module(backbone)
         self.backend = CLS_Model.build_module(backend)
 
-        # for test
+        # for test/val
         self.total = 0
         self.correct = 0
 
@@ -42,3 +42,7 @@ class CLS_Model(nn.Module):
 
     def get_test_acc(self):
         return 100 * self.correct // self.total
+
+    def reset_counter(self):
+        self.total = 0
+        self.correct = 0

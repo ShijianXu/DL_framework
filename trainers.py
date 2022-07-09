@@ -7,7 +7,8 @@ class Trainer(object):
     def __init__(self,
         config,
         model,
-        dataloader,
+        train_dataloader,
+        val_dataloader,
         criterion,
         optimizer,
         epochs,
@@ -16,7 +17,8 @@ class Trainer(object):
     ):
         self.config = config
         self.model = model
-        self.dataloader = dataloader
+        self.train_dataloader = train_dataloader
+        self.val_dataloader = val_dataloader
         self.criterion = criterion
         self.optimizer = optimizer
         self.epochs = epochs
@@ -27,13 +29,14 @@ class Trainer(object):
     def train(self):
         for epoch in range(self.epochs):
             losses_m = utils.AverageMeter()
-            for batch_idx, batch in enumerate(tqdm(self.dataloader)):
+            for batch_idx, batch in enumerate(tqdm(self.train_dataloader)):
                 self.process_batch(batch, losses_m)
 
                 if batch_idx % self.print_freq == 0:
                     print("Epoch:{}, batch: {}, loss: {:.5f}".format(epoch, batch_idx, losses_m.avg))
             
-            self.validate()
+            if epoch < self.epochs-1:
+                self.validate(epoch)
 
         print("Traing finished.")
         self.save_checkpoint()
@@ -50,8 +53,18 @@ class Trainer(object):
         loss.backward()
         self.optimizer.step()
 
-    def validate(self):
-        pass
+    def validate(self, epoch):
+        self.model.eval()
+        self.model.reset_counter()
+        print("Validating ...")
+
+        with torch.no_grad():
+            for batch_idx, batch in enumerate(tqdm(self.val_dataloader)):
+                inputs, target = batch
+                output = self.model(inputs)
+                self.model.accuracy(output, target)
+
+        print(f'Epoch: {epoch}, validate accuracy: {self.model.get_test_acc()} %')
 
     def save_checkpoint(self, filename='checkpoint_latest.pth'):
         state = {
