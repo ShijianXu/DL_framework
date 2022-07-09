@@ -26,14 +26,11 @@ class Tester(object):
 
     def test(self):
         self.model.eval()
-        correct = 0
-        total = 0
+
         with torch.no_grad():
             for batch_idx, batch in enumerate(tqdm(self.dataloader)):
                 inputs, target = batch
                 output = self.model(inputs)
-                cor, tot = self.model.accuracy(output, target)
-                correct += cor
-                total += tot
+                self.model.accuracy(output, target)
 
-        print(f'Test accuracy: {100 * correct // total} %')
+        print(f'Test accuracy: {self.model.get_test_acc()} %')
