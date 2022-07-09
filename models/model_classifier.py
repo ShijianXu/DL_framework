@@ -14,6 +14,10 @@ class CLS_Model(nn.Module):
         self.backbone = CLS_Model.build_module(backbone)
         self.backend = CLS_Model.build_module(backend)
 
+        # for test
+        self.total = 0
+        self.correct = 0
+
     @staticmethod
     def build_module(module_config):
         class_name = module_config["name"].split('.')[-1]
@@ -32,8 +36,9 @@ class CLS_Model(nn.Module):
     def accuracy(self, output, target):
         """Computes the accuracy over the k top predictions for the specified values of k"""
         with torch.no_grad():
-            total = target.size(0)
+            self.total += target.size(0)
             _, predicted = torch.max(output.data, 1)
-            correct = (predicted == target).sum().item()
+            self.correct += (predicted == target).sum().item()
 
-            return correct, total
+    def get_test_acc(self):
+        return 100 * self.correct // self.total
