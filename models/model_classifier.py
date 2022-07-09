@@ -30,4 +30,10 @@ class CLS_Model(nn.Module):
         return out
 
     def accuracy(self, output, target):
-        pass
+        """Computes the accuracy over the k top predictions for the specified values of k"""
+        with torch.no_grad():
+            total = target.size(0)
+            _, predicted = torch.max(output.data, 1)
+            correct = (predicted == target).sum().item()
+
+            return correct, total

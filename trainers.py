@@ -32,6 +32,8 @@ class Trainer(object):
 
                 if batch_idx % self.print_freq == 0:
                     print("Epoch:{}, batch: {}, loss: {:.5f}".format(epoch, batch_idx, losses_m.avg))
+            
+            self.validate()
 
         print("Traing finished.")
         self.save_checkpoint()
@@ -47,6 +49,9 @@ class Trainer(object):
         
         loss.backward()
         self.optimizer.step()
+
+    def validate(self):
+        pass
 
     def save_checkpoint(self, filename='checkpoint_latest.pth'):
         state = {
