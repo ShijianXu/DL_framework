@@ -41,9 +41,9 @@ transform=transforms.Compose([
 train_dataset = torchvision.datasets.CIFAR10('data', train=True, download=True, transform=transform)
 train_dataloader = DataLoader(
     train_dataset, 
-    batch_size=8, 
+    batch_size=16, 
     shuffle=True, 
-    num_workers=4
+    num_workers=8
 )
 print("Construct train dataset with {} samples".format(len(train_dataset)))
 
@@ -60,4 +60,5 @@ print("Construct test dataset with {} samples".format(len(test_dataset)))
 learning_rate = 0.001
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
-num_epochs = 2
+#optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+num_epochs = 5
