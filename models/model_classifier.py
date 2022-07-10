@@ -14,6 +14,9 @@ class CLS_Model(nn.Module):
         self.backbone = CLS_Model.build_module(backbone)
         self.backend = CLS_Model.build_module(backend)
 
+        self.num_params_backbone = sum(param.numel() for param in self.backbone.parameters())
+        self.num_params_backend = sum(param.numel() for param in self.backend.parameters())
+
         # for test/val
         self.total = 0
         self.correct = 0
@@ -42,6 +45,11 @@ class CLS_Model(nn.Module):
 
     def get_test_acc(self):
         return 100 * self.correct // self.total
+
+    def get_num_params(self):
+        print(f"Backbone num of params: {self.num_params_backbone}")
+        print(f"Backend num of params: {self.num_params_backend}")
+        return self.num_params_backbone + self.num_params_backend
 
     def reset_counter(self):
         self.total = 0

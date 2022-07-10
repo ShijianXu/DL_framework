@@ -21,7 +21,9 @@ backend = {}
 backend["name"] = "models.backend_cls.Classifier"
 backend["config"] = {
     "input_dim": 64,
-    "output_dim": 10
+    "output_dim": 10,
+    "num_layers": 1,
+    "num_hiddens": []
 }
 
 model_config = {
@@ -31,7 +33,7 @@ model_config = {
 
 #model = torchvision.models.resnet18(pretrained=False)
 model = models.model_classifier.CLS_Model(**model_config)
-print("Model init.")
+print(f"Total model parameters: {model.get_num_params()}")
 
 # Data part
 transform=transforms.Compose([
@@ -61,3 +63,5 @@ print("Construct test dataset with {} samples".format(len(test_dataset)))
 learning_rate = 0.001
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
+#optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+num_epochs = 10

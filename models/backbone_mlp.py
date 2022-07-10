@@ -22,5 +22,8 @@ class MLP(nn.Module):
         self.layers = nn.Sequential(*layers)
 
     def forward(self, x):
+        if len(x.shape) == 4:
+            x = torch.flatten(x, 1)  # flatten all dimensions except batch
+            
         out = self.layers(x)
         return out

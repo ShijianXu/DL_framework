@@ -30,7 +30,7 @@ model_config = {
 
 #model = torchvision.models.resnet18(pretrained=False)
 model = models.model_classifier.CLS_Model(**model_config)
-print("Model init.")
+print(f"Total model parameters: {model.get_num_params()}")
 
 # Data part
 transform=transforms.Compose([
@@ -61,4 +61,4 @@ learning_rate = 0.001
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
 #optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-num_epochs = 2
+num_epochs = 20
