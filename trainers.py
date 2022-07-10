@@ -2,6 +2,7 @@ import os
 import torch
 from tqdm import tqdm
 import utils
+from torch.utils.tensorboard import SummaryWriter
 
 class Trainer(object):
     def __init__(self,
@@ -13,7 +14,8 @@ class Trainer(object):
         optimizer,
         epochs,
         print_freq=400,
-        log_dir='./logs'
+        log_dir='./logs',
+        resume=True,
     ):
         self.config = config
         self.model = model
@@ -22,24 +24,40 @@ class Trainer(object):
         self.criterion = criterion
         self.optimizer = optimizer
         self.epochs = epochs
+        self.start_epoch = 0
 
         self.print_freq = print_freq
         self.log_dir = log_dir
+        self.resume = resume
 
     def train(self):
-        for epoch in range(self.epochs):
-            losses_m = utils.AverageMeter()
-            for batch_idx, batch in enumerate(tqdm(self.train_dataloader)):
-                self.process_batch(batch, losses_m)
+        if self.resume:
+            ckpt_path = os.path.join(self.log_dir, 'checkpoints', 'checkpoint_latest.pth')
+            if os.path.exists(os.path.join(self.log_dir, 'checkpoints')) and os.path.isfile(ckpt_path):
+                    print("=> Resuming ckpt ...")
+                    self.resume_ckpt(ckpt_path)
+            else:
+                print("=> No ckpt in log dir.")
+        else:
+            print("=> Start training ...")
 
-                if batch_idx % self.print_freq == 0:
-                    print("Epoch:{}, batch: {}, loss: {:.5f}".format(epoch, batch_idx, losses_m.avg))
+        try:
+            for epoch in range(self.start_epoch, self.epochs):
+                losses_m = utils.AverageMeter()
+                for batch_idx, batch in enumerate(tqdm(self.train_dataloader)):
+                    self.process_batch(batch, losses_m)
+
+                    if batch_idx % self.print_freq == 0:
+                        print("Epoch:{}, batch: {}, loss: {:.5f}".format(epoch, batch_idx, losses_m.avg))
             
-            if epoch < self.epochs-1:
-                self.validate(epoch)
+                if epoch < self.epochs-1:
+                    self.validate(epoch)
 
-        print("Traing finished.")
-        self.save_checkpoint()
+            print("=> Traing finished.")
+            self.save_checkpoint(self.epochs)
+
+        except KeyboardInterrupt:
+            self.save_checkpoint(epoch)
 
     def process_batch(self, batch, losses_m):
         self.model.train()
@@ -66,14 +84,23 @@ class Trainer(object):
 
         print(f'Epoch: {epoch}, validate accuracy: {self.model.get_test_acc()} %')
 
-    def save_checkpoint(self, filename='checkpoint_latest.pth'):
+    def resume_ckpt(self, ckpt_path):
+        checkpoint = torch.load(ckpt_path)
+        self.model.load_state_dict(checkpoint['state_dict'])
+        self.start_epoch = checkpoint['epoch']
+        self.optimizer.load_state_dict(checkpoint['optimizer'])
+        print("=> Resumed checkpoint '{}'".format(ckpt_path))
+
+    def save_checkpoint(self, epoch, filename='checkpoint_latest.pth'):
         state = {
             'state_dict': self.model.state_dict(),
-            'optimizer' : self.optimizer.state_dict(),
+            'epoch': epoch,
+            'optimizer': self.optimizer.state_dict(),
         }
 
-        if not os.path.exists(self.log_dir):
-            os.mkdir(self.log_dir)
+        model_dir = os.path.join(self.log_dir, 'checkpoints')
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
         
-        filename = os.path.join(self.log_dir, filename)
+        filename = os.path.join(model_dir, filename)
         torch.save(state, filename)

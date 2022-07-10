@@ -17,12 +17,12 @@ class Tester(object):
         self.print_freq = print_freq
         self.ckpt_path = ckpt_path
 
-        self.load_model(self.ckpt_path)
+        self.load_model()
 
-    def load_model(self, ckpt_path):
-        checkpoint = torch.load(ckpt_path)
+    def load_model(self):
+        checkpoint = torch.load(self.ckpt_path)
         self.model.load_state_dict(checkpoint['state_dict'])
-        print("=> loaded checkpoint '{}'".format(ckpt_path))
+        print("=> loaded checkpoint '{}'".format(self.ckpt_path))
 
     def test(self):
         self.model.eval()
