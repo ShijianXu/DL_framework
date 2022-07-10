@@ -16,6 +16,7 @@ class Trainer(object):
         print_freq=400,
         log_dir='./logs',
         resume=True,
+        log_tool='tensorboard'
     ):
         self.config = config
         self.model = model
@@ -25,12 +26,18 @@ class Trainer(object):
         self.optimizer = optimizer
         self.epochs = epochs
         self.start_epoch = 0
+        self.total_steps = 0
 
         self.print_freq = print_freq
         self.log_dir = log_dir
         self.resume = resume
 
+        if log_tool == 'tensorboard':
+            self.writer = SummaryWriter(log_dir=os.path.join(self.log_dir, "log"))
+
     def train(self):
+        # from pudb import set_trace; set_trace()
+
         if self.resume:
             ckpt_path = os.path.join(self.log_dir, 'checkpoints', 'checkpoint_latest.pth')
             if os.path.exists(os.path.join(self.log_dir, 'checkpoints')) and os.path.isfile(ckpt_path):
@@ -55,6 +62,7 @@ class Trainer(object):
 
             print("=> Traing finished.")
             self.save_checkpoint(self.epochs)
+            self.writer.close()
 
         except KeyboardInterrupt:
             self.save_checkpoint(epoch)
@@ -66,22 +74,29 @@ class Trainer(object):
         inputs, gt = batch
         outputs = self.model(inputs)
         loss = self.criterion(outputs, gt)
+        self.writer.add_scalar("Train/Loss", loss.item(), self.total_steps)
         losses_m.update(loss.item(), inputs.size(0))
         
         loss.backward()
         self.optimizer.step()
+        self.total_steps += 1
 
     def validate(self, epoch):
         self.model.eval()
         self.model.reset_counter()
-        print("Validating ...")
+        losses_v = utils.AverageMeter()
+        print("=> Validating ...")
 
         with torch.no_grad():
             for batch_idx, batch in enumerate(tqdm(self.val_dataloader)):
                 inputs, target = batch
                 output = self.model(inputs)
+                loss = self.criterion(output, target)
+                losses_v.update(loss.item(), inputs.size(0))
                 self.model.accuracy(output, target)
 
+        self.writer.add_scalar("Valid/Loss", losses_v.avg, epoch)
+        self.writer.add_scalar("Valid/Accuracy", self.model.get_test_acc(), epoch)
         print(f'Epoch: {epoch}, validate accuracy: {self.model.get_test_acc()} %')
 
     def resume_ckpt(self, ckpt_path):

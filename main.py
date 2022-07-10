@@ -1,6 +1,5 @@
 import argparse
 import importlib
-from xmlrpc.client import Boolean
 
 from trainers import Trainer
 from tester import Tester
