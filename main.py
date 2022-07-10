@@ -1,5 +1,6 @@
 import argparse
 import importlib
+from xmlrpc.client import Boolean
 
 from trainers import Trainer
 from tester import Tester
@@ -16,7 +17,7 @@ if __name__ == '__main__':
         "--log", type=str, default='./logs', help="Path to log."
     )
     parser.add_argument(
-        "--resume", type=str, help="Path to the resumed checkpoint."
+        "--auto_resume", type=bool, default=True, help="Whether to check and load the latest checkpoint from log dir."
     )
     parser.add_argument(
         "--ckpt", type=str, help="Path to the test checkpoint."
@@ -45,6 +46,7 @@ if __name__ == '__main__':
             epochs=config.num_epochs,
             print_freq=args.print_freq,
             log_dir=args.log,
+            resume=args.auto_resume,
         )
         trainer.train()
 
