@@ -8,7 +8,7 @@ import models.model_classifier
 
 # Model part
 backbone = {}
-backbone["name"] = "models.backbone_cnn.CNN"
+backbone["name"] = "models.backbone_cnn.SimpleCNN"
 backbone["config"] = {
     "input_channels": 3,
     "output_channels": 16
