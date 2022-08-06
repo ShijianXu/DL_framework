@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class CNN(nn.Module):
+class SimpleCNN(nn.Module):
     def __init__(self,
         input_channels,
         output_channels,
@@ -20,7 +20,7 @@ class CNN(nn.Module):
         return out
 
 if __name__ == '__main__':
-    model = CNN(3, 16)
+    model = SimpleCNN(3, 16)
     x = torch.rand(4, 3, 32, 32)
     out = model(x)
     print(out.shape)
