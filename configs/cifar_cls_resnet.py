@@ -48,7 +48,7 @@ test_dataloader = DataLoader(
 print("Construct test dataset with {} samples".format(len(test_dataset)))
 
 # Loss and training part
-learning_rate = 0.001
+learning_rate = 0.0001
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
 #optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
