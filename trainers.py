@@ -111,7 +111,7 @@ class Trainer(object):
         print(f'Epoch: {epoch}, validate accuracy: {self.model.get_test_acc()} %')
 
     def resume_ckpt(self, ckpt_path):
-        checkpoint = torch.load(ckpt_path)
+        checkpoint = torch.load(ckpt_path, map_location=self.device)
         self.model.load_state_dict(checkpoint['state_dict'])
         self.start_epoch = checkpoint['epoch']
         self.optimizer.load_state_dict(checkpoint['optimizer'])
