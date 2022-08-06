@@ -8,15 +8,15 @@ import models.model_classifier
 
 # Model part
 backbone = torchvision.models.resnet18(pretrained=False)
-
 # change last layer of ResNet
 num_final_in = backbone.fc.in_features
 NUM_CLASSES = 10
 backbone.fc = torch.nn.Linear(num_final_in, NUM_CLASSES)
 
+backend = torch.nn.Identity()
 model_config = {
     "backbone": backbone,
-    "backend": torch.nn.Identity(),
+    "backend": backend,
     "created": True
 }
 
