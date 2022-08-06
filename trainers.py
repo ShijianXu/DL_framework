@@ -32,14 +32,17 @@ class Trainer(object):
         self.log_dir = log_dir
         self.resume = resume
 
+        # init logger
         if log_tool == 'tensorboard':
             self.writer = SummaryWriter(log_dir=os.path.join(self.log_dir, "log"))
 
+        # check device
         if torch.cuda.is_available():
             self.device = torch.device('cuda:0')
         else:
             self.device = torch.device('cpu')
 
+        # to device
         self.model.to(self.device)
         self.criterion.to(self.device)
 
