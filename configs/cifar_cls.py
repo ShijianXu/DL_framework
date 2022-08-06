@@ -17,7 +17,7 @@ backbone["config"] = {
 backend = {}
 backend["name"] = "models.backend_cls.Classifier"
 backend["config"] = {
-    "input_dim": 16*5*5,
+    "input_dim": 16*5*5,    # sepcify according to the SimpleCNN structure and input size
     "output_dim": 10,
     "num_layers": 3,
     "num_hiddens": [120, 84]
