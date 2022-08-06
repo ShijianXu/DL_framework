@@ -7,25 +7,17 @@ import torchvision.transforms as transforms
 import models.model_classifier
 
 # Model part
-backbone = {}
-backbone["name"] = "models.backbone_cnn.SimpleCNN"
-backbone["config"] = {
-    "input_channels": 3,
-    "output_channels": 16
-}
+backbone = torchvision.models.resnet18(pretrained=False)
 
-backend = {}
-backend["name"] = "models.backend_cls.Classifier"
-backend["config"] = {
-    "input_dim": 16*5*5,    # sepcify according to the SimpleCNN structure and input size
-    "output_dim": 10,
-    "num_layers": 3,
-    "num_hiddens": [120, 84]
-}
+# change last layer of ResNet
+num_final_in = backbone.fc.in_features
+NUM_CLASSES = 10
+backbone.fc = torch.nn.Linear(num_final_in, NUM_CLASSES)
 
 model_config = {
     "backbone": backbone,
-    "backend": backend,
+    "backend": torch.nn.Identity(),
+    "created": True
 }
 
 model = models.model_classifier.CLS_Model(**model_config)

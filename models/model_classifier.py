@@ -1,4 +1,5 @@
 import importlib
+from turtle import back
 
 import torch
 import torch.nn as nn
@@ -7,12 +8,17 @@ class CLS_Model(nn.Module):
     def __init__(self,
         backbone,
         backend,
+        created=False
     ):
         super(CLS_Model, self).__init__()
 
         # build modules
-        self.backbone = CLS_Model.build_module(backbone)
-        self.backend = CLS_Model.build_module(backend)
+        if not created:
+            self.backbone = CLS_Model.build_module(backbone)
+            self.backend = CLS_Model.build_module(backend)
+        else:
+            self.backbone = backbone
+            self.backend = backend
 
         self.num_params_backbone = sum(param.numel() for param in self.backbone.parameters())
         self.num_params_backend = sum(param.numel() for param in self.backend.parameters())
