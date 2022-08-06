@@ -1,4 +1,4 @@
 python main.py \
     --mode test \
-    --config configs/cifar_cls.py \
-    --ckpt ./logs/cifar_cls/checkpoints/checkpoint_latest.pth
+    --config configs/cifar_cls_resnet.py \
+    --ckpt ./logs/cifar_cls_resnet/checkpoints/checkpoint_latest.pth
