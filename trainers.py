@@ -98,8 +98,8 @@ class Trainer(object):
         with torch.no_grad():
             for batch_idx, batch in enumerate(tqdm(self.val_dataloader)):
                 inputs, target = batch
-                output = self.model(inputs)
-                loss = self.criterion(output, target)
+                output = self.model(inputs.to(self.device))
+                loss = self.criterion(output, target.to(self.device))
                 losses_v.update(loss.item(), inputs.size(0))
                 self.model.accuracy(output, target)
 
