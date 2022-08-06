@@ -16,3 +16,7 @@ class AverageMeter(object):
         self.sum += val * n
         self.count += n
         self.avg = self.sum / self.count
+
+
+def pair(t):
+    return t if isinstance(t, tuple) else (t, t)
