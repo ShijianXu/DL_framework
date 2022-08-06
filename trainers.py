@@ -1,6 +1,7 @@
 import os
 import torch
 from tqdm import tqdm
+from zmq import device
 import utils
 from torch.utils.tensorboard import SummaryWriter
 
@@ -34,6 +35,14 @@ class Trainer(object):
 
         if log_tool == 'tensorboard':
             self.writer = SummaryWriter(log_dir=os.path.join(self.log_dir, "log"))
+
+        if torch.cuda.is_available():
+            self.device = torch.device('cuda:0')
+        else:
+            self.device = torch.device('cpu')
+
+        self.model.to(self.device)
+        self.criterion.to(self.device)
 
     def train(self):
         # from pudb import set_trace; set_trace()
@@ -72,8 +81,8 @@ class Trainer(object):
         self.optimizer.zero_grad()
 
         inputs, gt = batch
-        outputs = self.model(inputs)
-        loss = self.criterion(outputs, gt)
+        outputs = self.model(inputs.to(self.device))
+        loss = self.criterion(outputs, gt.to(self.device))
         self.writer.add_scalar("Train/Loss", loss.item(), self.total_steps)
         losses_m.update(loss.item(), inputs.size(0))
         
