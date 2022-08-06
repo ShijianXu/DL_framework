@@ -1,7 +1,6 @@
 import os
 import torch
 from tqdm import tqdm
-from zmq import device
 import utils
 from torch.utils.tensorboard import SummaryWriter
 
