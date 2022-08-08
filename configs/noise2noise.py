@@ -1,6 +1,5 @@
 import torch
 from torch.utils.data import DataLoader
-import torchvision.transforms as transforms
 
 from datasets.n2n_dataset import Noise2NoiseDataset
 import models.model_noise2noise
@@ -26,27 +25,37 @@ print(f"Total model parameters: {model.get_num_params()}")
 
 
 # Data part
-train_dataset = Noise2NoiseDataset('./data/DIV2K_train_80')
+train_dataset = Noise2NoiseDataset('./data/DIV2K_train_80', crop_size=64)
 train_dataloader = DataLoader(
     train_dataset, 
-    batch_size=16, 
+    batch_size=4, 
     shuffle=True, 
-    num_workers=8
+    num_workers=2
 )
 print("Construct train dataset with {} samples".format(len(train_dataset)))
 
-test_dataset = Noise2NoiseDataset('./data/DIV2K_valid_20')
-test_dataloader = DataLoader(
-    test_dataset, 
-    batch_size=4, 
+valid_dataset = Noise2NoiseDataset('./data/DIV2K_valid_20', crop_size=64, clean_targets=True)
+valid_dataloader = DataLoader(
+    valid_dataset, 
+    batch_size=1, 
     shuffle=False, 
-    num_workers=2
+    num_workers=1
 )
-print("Construct test dataset with {} samples".format(len(test_dataset)))
+print("Construct test dataset with {} samples".format(len(valid_dataset)))
 
-# # Loss and training part
-# learning_rate = 0.0001
-# loss = torch.nn.CrossEntropyLoss()
-# optimizer = torch.optim.Adam(model.parameters(), learning_rate)
-# #optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-# num_epochs = 20
+
+# Test dataset & test dataloader (not paired, just some corrupted inputs)
+# test_dataset = xxx
+# test_dataloader = DataLoader()
+
+
+# Loss and training part
+num_epochs = 10
+learning_rate = 0.001
+loss = torch.nn.MSELoss()
+optimizer = torch.optim.Adam(model.parameters(),
+                             lr=learning_rate, 
+                             betas=(0.9, 0.99),
+                             eps=1e-8)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer,
+                patience=num_epochs/4, factor=0.5, verbose=True)

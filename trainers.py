@@ -13,6 +13,7 @@ class Trainer(object):
         criterion,
         optimizer,
         epochs,
+        scheduler=None,
         print_freq=400,
         log_dir='./logs',
         resume=True,
@@ -24,6 +25,7 @@ class Trainer(object):
         self.val_dataloader = val_dataloader
         self.criterion = criterion
         self.optimizer = optimizer
+        self.scheduler = scheduler
         self.epochs = epochs
         self.start_epoch = 0
         self.total_steps = 0
@@ -60,16 +62,16 @@ class Trainer(object):
             print("=> Start training ...")
 
         try:
+            self.losses_m = utils.AverageMeter()
             for epoch in range(self.start_epoch, self.epochs):
-                losses_m = utils.AverageMeter()
                 for batch_idx, batch in enumerate(tqdm(self.train_dataloader)):
-                    self.process_batch(batch, losses_m)
+                    self.process_batch(batch)
 
                     if batch_idx % self.print_freq == 0:
-                        print("Epoch:{}, batch: {}, loss: {:.5f}".format(epoch, batch_idx, losses_m.avg))
+                        print("Epoch:{}, batch: {}, loss: {:.5f}".format(epoch, batch_idx, self.losses_m.avg))
             
-                if epoch < self.epochs-1:
-                    self.validate(epoch)
+                self._on_epoch_end(epoch)
+                self.losses_m.reset()
 
             print("=> Traing finished.")
             self.save_checkpoint(self.epochs)
@@ -78,15 +80,22 @@ class Trainer(object):
         except KeyboardInterrupt:
             self.save_checkpoint(epoch)
 
-    def process_batch(self, batch, losses_m):
+    def _on_epoch_end(self, epoch):
+        if epoch < self.epochs-1:
+            valid_loss = self.validate(epoch)
+
+            if self.scheduler is not None:
+                self.scheduler.step(valid_loss)
+
+    def process_batch(self, batch):
         self.model.train()
         self.optimizer.zero_grad()
 
-        inputs, gt = batch
-        outputs = self.model(inputs.to(self.device))
-        loss = self.criterion(outputs, gt.to(self.device))
+        source, target = batch
+        outputs = self.model(source.to(self.device))
+        loss = self.criterion(outputs, target.to(self.device))
         self.writer.add_scalar("Train/Loss", loss.item(), self.total_steps)
-        losses_m.update(loss.item(), inputs.size(0))
+        self.losses_m.update(loss.item(), source.size(0))
         
         loss.backward()
         self.optimizer.step()
@@ -100,15 +109,18 @@ class Trainer(object):
 
         with torch.no_grad():
             for batch_idx, batch in enumerate(tqdm(self.val_dataloader)):
-                inputs, target = batch
-                output = self.model(inputs.to(self.device))
+                source, target = batch
+                output = self.model(source.to(self.device))
                 loss = self.criterion(output, target.to(self.device))
-                losses_v.update(loss.item(), inputs.size(0))
-                self.model.accuracy(output, target.to(self.device))
+                losses_v.update(loss.item(), source.size(0))
+
+                # accuracy for classification
+                # PSNR for dense prediction
+                self.model.compute_metric(epoch, output, target.to(self.device))
 
         self.writer.add_scalar("Valid/Loss", losses_v.avg, epoch)
-        self.writer.add_scalar("Valid/Accuracy", self.model.get_test_acc(), epoch)
-        print(f'Epoch: {epoch}, validate accuracy: {self.model.get_test_acc()} %')
+        self.writer.add_scalar("Valid/Metric", self.model.get_metric_value(), epoch)
+        return losses_v.avg
 
     def resume_ckpt(self, ckpt_path):
         checkpoint = torch.load(ckpt_path, map_location=self.device)

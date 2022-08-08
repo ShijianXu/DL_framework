@@ -43,6 +43,7 @@ if __name__ == '__main__':
             criterion=config.loss,
             optimizer=config.optimizer,
             epochs=config.num_epochs,
+            scheduler=config.scheduler,
             print_freq=args.print_freq,
             log_dir=args.log,
             resume=args.auto_resume,

@@ -40,14 +40,16 @@ class CLS_Model(nn.Module):
         out = self.backend(x)
         return out
 
-    def accuracy(self, output, target):
+    def compute_metric(self, epoch, output, target):
         """Computes the accuracy over the k top predictions for the specified values of k"""
         with torch.no_grad():
             self.total += target.size(0)
             _, predicted = torch.max(output.data, 1)
             self.correct += (predicted == target).sum().item()
 
-    def get_test_acc(self):
+        print(f'Epoch: {epoch}, validate accuracy: {self.get_metric_value()} %')
+
+    def get_metric_value(self):
         return 100 * self.correct // self.total
 
     def get_num_params(self):
