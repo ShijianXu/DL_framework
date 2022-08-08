@@ -35,6 +35,7 @@ class Tester(object):
         print("=> loaded checkpoint '{}'".format(self.ckpt_path))
 
     def test(self):
+        print("Testing ...")
         self.model.eval()
         self.model.reset_metric()
 
