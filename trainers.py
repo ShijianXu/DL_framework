@@ -116,10 +116,11 @@ class Trainer(object):
 
                 # accuracy for classification
                 # PSNR for dense prediction
-                self.model.compute_metric(epoch, output, target.to(self.device))
+                self.model.compute_metric(output, target.to(self.device))
 
         self.writer.add_scalar("Valid/Loss", losses_v.avg, epoch)
         self.writer.add_scalar("Valid/Metric", self.model.get_metric_value(), epoch)
+        self.model.get_metric_value(epoch)
         return losses_v.avg
 
     def resume_ckpt(self, ckpt_path):
