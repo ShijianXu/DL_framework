@@ -60,4 +60,5 @@ learning_rate = 0.001
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
 #optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+scheduler = None
 num_epochs = 20

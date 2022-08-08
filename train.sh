@@ -1,4 +1,4 @@
 python main.py \
     --mode train \
-    --config configs/noise2noise.py \
-    --log ./logs/noise2noise
+    --config configs/cifar_cls.py \
+    --log ./logs/cifar_cls
