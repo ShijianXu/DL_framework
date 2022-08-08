@@ -47,8 +47,11 @@ class CLS_Model(nn.Module):
             _, predicted = torch.max(output.data, 1)
             self.correct += (predicted == target).sum().item()
 
-    def get_metric_value(self, epoch):
-        print(f'Epoch: {epoch}, validate accuracy: {100 * self.correct // self.total} %')
+    def get_metric_value(self):
+        return 100 * self.correct // self.total
+
+    def display_metric_value(self, epoch):
+        print(f'Epoch: {epoch}, validate accuracy: {self.get_metric_value()} %')
 
     def get_num_params(self):
         print(f"Backbone num of params: {self.num_params_backbone}")
