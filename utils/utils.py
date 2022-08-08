@@ -1,4 +1,6 @@
 # some utility classes and functions
+import torch
+import torch.nn.functional as F
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -22,5 +24,7 @@ def pair(t):
     return t if isinstance(t, tuple) else (t, t)
 
 
-def PSNR():
-    pass
+def PSNR(input, target):
+    """Computes peak signal-to-noise ratio."""
+    
+    return 10 * torch.log10(1 / F.mse_loss(input, target))

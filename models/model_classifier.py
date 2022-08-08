@@ -28,6 +28,6 @@ class CLS_Model(Abstract_Model):
     def display_metric_value(self, epoch):
         print(f'Epoch: {epoch}, validate accuracy: {self.get_metric_value()} %')
 
-    def reset_counter(self):
+    def reset_metric(self):
         self.total = 0
         self.correct = 0

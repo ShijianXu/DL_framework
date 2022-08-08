@@ -3,8 +3,8 @@
 import os
 import numpy as np
 from PIL import Image
-from torch.utils.data import Dataset
-from torchvision.utils import save_image, make_grid
+from torch.utils.data import Dataset, DataLoader
+from torchvision.utils import save_image
 import torchvision.transforms.functional as tvF
 
 
@@ -109,8 +109,15 @@ class Noise2NoiseDataset(AbstractDataset):
 
 
 if __name__ == '__main__':
-    dataset = Noise2NoiseDataset('./data/DIV2K_valid_HR')
-    for idx, data in enumerate(dataset):
-        save_image(data[0], "./logs/source.png")
-        save_image(data[1], "./logs/target.png")
+    train_dataset = Noise2NoiseDataset('./data/DIV2K_train_80', crop_size=64)
+    train_dataloader = DataLoader(
+        train_dataset, 
+        batch_size=4, 
+        shuffle=True, 
+        num_workers=2
+    )
+
+    for batch_idx, batch in enumerate(train_dataloader):
+        source, target = batch
+        print(source.size(0))
         break

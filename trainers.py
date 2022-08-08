@@ -106,7 +106,7 @@ class Trainer(object):
 
     def validate(self, epoch):
         self.model.eval()
-        self.model.reset_counter()
+        self.model.reset_metric()
         losses_v = utils.AverageMeter()
         print("=> Validating ...")
 
