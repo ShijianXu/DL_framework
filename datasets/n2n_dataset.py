@@ -107,7 +107,6 @@ class Noise2NoiseDataset(AbstractDataset):
         return source, target
 
 
-
 if __name__ == '__main__':
     train_dataset = Noise2NoiseDataset('./data/DIV2K_train_80', crop_size=64)
     train_dataloader = DataLoader(

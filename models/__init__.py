@@ -50,7 +50,7 @@ class Abstract_Model(nn.Module):
     def get_metric_value(self):
         raise NotImplementedError("Abstract method not implemented.")
 
-    def display_metric_value(self, epoch):
+    def display_metric_value(self):
         raise NotImplementedError("Abstract method not implemented.")
 
     def reset_metric(self):
