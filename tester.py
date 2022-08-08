@@ -36,7 +36,7 @@ class Tester(object):
 
     def test(self):
         self.model.eval()
-        self.model.reset_counter()
+        self.model.reset_metric()
 
         with torch.no_grad():
             for batch_idx, batch in enumerate(tqdm(self.dataloader)):
