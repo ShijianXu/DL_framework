@@ -1,19 +1,29 @@
 import torch
 from torch.utils.data import DataLoader
-
-import torchvision
 import torchvision.transforms as transforms
 
 from datasets.n2n_dataset import Noise2NoiseDataset
+import models.model_noise2noise
 
 # Model part
-backbone = torchvision.models.resnet18(pretrained=False)
+backbone = {}
+backbone["name"] = "models.backbone_unet_n2n.UNet"
+backbone["config"] = {
+    "in_channels": 3,
+    "out_channels": 3
+}
+
 backend = torch.nn.Identity()
 model_config = {
     "backbone": backbone,
     "backend": backend,
-    "created": True
+    "backbone_created": False,
+    "backend_created": True,
 }
+
+model = models.model_noise2noise.Noise2Noise(**model_config)
+print(f"Total model parameters: {model.get_num_params()}")
+
 
 # Data part
 train_dataset = Noise2NoiseDataset('./data/DIV2K_train_80')
