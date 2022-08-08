@@ -68,7 +68,7 @@ class Trainer(object):
                     self.process_batch(batch)
 
                     if batch_idx % self.print_freq == 0:
-                        print("Epoch:{}, batch: {}, loss: {:.5f}".format(epoch, batch_idx, self.losses_m.avg))
+                        print("Epoch:{}, batch: {}, train loss: {:.5f}".format(epoch, batch_idx, self.losses_m.avg))
             
                 self._on_epoch_end(epoch)
                 self.losses_m.reset()
@@ -83,6 +83,7 @@ class Trainer(object):
     def _on_epoch_end(self, epoch):
         if epoch < self.epochs-1:
             valid_loss = self.validate(epoch)
+            print("Epoch:{}, valid loss: {:.5f}".format(epoch, valid_loss))
 
             if self.scheduler is not None:
                 self.scheduler.step(valid_loss)
