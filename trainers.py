@@ -87,6 +87,9 @@ class Trainer(object):
             if self.scheduler is not None:
                 self.scheduler.step(valid_loss)
 
+            # TODO: log learning rate
+            # self.writer.add_scalar("Train/Learning rate", lr, epoch)
+
     def process_batch(self, batch):
         self.model.train()
         self.optimizer.zero_grad()

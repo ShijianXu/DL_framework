@@ -20,3 +20,7 @@ class AverageMeter(object):
 
 def pair(t):
     return t if isinstance(t, tuple) else (t, t)
+
+
+def PSNR():
+    pass
