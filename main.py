@@ -39,7 +39,7 @@ if __name__ == '__main__':
             config=config,
             model=config.model,
             train_dataloader=config.train_dataloader,
-            val_dataloader=config.test_dataloader,
+            val_dataloader=config.valid_dataloader,
             criterion=config.loss,
             optimizer=config.optimizer,
             epochs=config.num_epochs,
@@ -54,7 +54,7 @@ if __name__ == '__main__':
         tester = Tester(
             config=config,
             model=config.model,
-            dataloader=config.test_dataloader,
+            dataloader=config.valid_dataloader,
             ckpt_path=args.ckpt,
         )
         tester.test()
