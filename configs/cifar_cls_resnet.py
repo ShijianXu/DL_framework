@@ -17,7 +17,8 @@ backend = torch.nn.Identity()
 model_config = {
     "backbone": backbone,
     "backend": backend,
-    "created": True
+    "backbone_created": True,
+    "backend_created": True
 }
 
 model = models.model_classifier.CLS_Model(**model_config)
