@@ -120,7 +120,7 @@ class Trainer(object):
 
         self.writer.add_scalar("Valid/Loss", losses_v.avg, epoch)
         self.writer.add_scalar("Valid/Metric", self.model.get_metric_value(), epoch)
-        self.model.get_metric_value(epoch)
+        self.model.display_metric_value(epoch)
         return losses_v.avg
 
     def resume_ckpt(self, ckpt_path):
