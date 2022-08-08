@@ -63,8 +63,9 @@ print("Construct test dataset with {} samples".format(len(test_dataset)))
 
 # Loss and training part
 learning_rate = 0.0001
+num_epochs = 20
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
 #optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-scheduler = None
-num_epochs = 20
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer,
+                patience=num_epochs/4, factor=0.5, verbose=True)
