@@ -18,7 +18,7 @@ class Noise2Noise(Abstract_Model):
 
     def compute_metric(self, output, target):
         """Computes PSNR value"""
-        # TODO: compute PSNR value
+
         batch_size = output.size(0)
         output = output.cpu()
         target = target.cpu()
@@ -31,8 +31,8 @@ class Noise2Noise(Abstract_Model):
     def get_metric_value(self):
         return self.psnr_m.avg
 
-    def display_metric_value(self, epoch):
-        print(f'Epoch: {epoch}, PSNR value: {self.get_metric_value()}')
+    def display_metric_value(self):
+        print(f'PSNR value: {self.get_metric_value()}')
 
     def reset_metric(self):
         self.psnr_m.reset()

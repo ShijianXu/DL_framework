@@ -25,8 +25,8 @@ class CLS_Model(Abstract_Model):
     def get_metric_value(self):
         return 100 * self.correct // self.total
 
-    def display_metric_value(self, epoch):
-        print(f'Epoch: {epoch}, validate accuracy: {self.get_metric_value()} %')
+    def display_metric_value(self):
+        print(f'Validate accuracy: {self.get_metric_value()} %')
 
     def reset_metric(self):
         self.total = 0

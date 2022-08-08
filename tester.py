@@ -44,4 +44,4 @@ class Tester(object):
                 output = self.model(inputs.to(self.device))
                 self.model.compute_metric(output, target.to(self.device))
 
-        print(f'Test accuracy: {self.model.get_metric_value()} %')
+        self.model.display_metric_value()
