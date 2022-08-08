@@ -1,4 +1,4 @@
 python main.py \
     --mode train \
-    --config configs/cifar_cls_resnet.py \
-    --log ./logs/cifar_cls_resnet
+    --config configs/noise2noise.py \
+    --log ./logs/noise2noise
