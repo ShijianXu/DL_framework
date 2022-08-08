@@ -42,6 +42,6 @@ class Tester(object):
             for batch_idx, batch in enumerate(tqdm(self.dataloader)):
                 inputs, target = batch
                 output = self.model(inputs.to(self.device))
-                self.model.accuracy(output, target.to(self.device))
+                self.model.compute_metric(output, target.to(self.device))
 
-        print(f'Test accuracy: {self.model.get_test_acc()} %')
+        print(f'Test accuracy: {self.model.get_metric_value()} %')
