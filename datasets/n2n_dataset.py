@@ -182,7 +182,7 @@ class TestDataset(Dataset):
 
 if __name__ == '__main__':
     save_dir = './data/DIV2K_test_text'
-    dataset = Noise2NoiseDataset('./data/DIV2K_valid_20', crop_size=256, clean_targets=True, noise_dist=('text', 0.5))
+    dataset = Noise2NoiseDataset('./data/DIV2K_valid_20', crop_size=512, clean_targets=True, noise_dist=('text', 0.5))
     for idx, data in enumerate(dataset):
         print(idx)
         source_img = str(idx) + '_noisy.png'
