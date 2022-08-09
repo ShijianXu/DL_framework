@@ -106,6 +106,20 @@ class Noise2NoiseDataset(AbstractDataset):
 
         return source, target
 
+class TestDataset(Dataset):
+    def __init__(self, root_dir) -> None:
+        super(TestDataset, self).__init__()
+        
+        self.imgs = os.listdir(root_dir)
+
+    def __getitem__(self, index):
+        img_path = os.path.join(self.root_dir, self.imgs[index])
+        img = Image.open(img_path).convert('RGB')
+        img = tvF.to_tensor(img)
+        return img
+
+    def __len__(self):
+        return len(self.imgs)
 
 
 if __name__ == '__main__':
@@ -114,6 +128,6 @@ if __name__ == '__main__':
     for idx, data in enumerate(dataset):
         print(idx)
         source_img = str(idx) + '_noisy.png'
-        save_image(data[0], os.path.join(save_dir, source_img))
+        save_image(data[0], os.path.join(save_dir, 'noisy', source_img))
         target_img = str(idx) + '_clean.png'
-        save_image(data[1], os.path.join(save_dir, target_img))
+        save_image(data[1], os.path.join(save_dir, 'clean', target_img))

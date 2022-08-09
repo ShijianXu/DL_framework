@@ -1,6 +1,7 @@
+import os
 import torch
 from tqdm import tqdm
-import utils
+from torchvision.utils import save_image
 
 class Tester(object):
     def __init__(self,
@@ -34,11 +35,7 @@ class Tester(object):
         self.model.load_state_dict(checkpoint['state_dict'])
         print("=> loaded checkpoint '{}'".format(self.ckpt_path))
 
-    def test(self):
-        print("Testing ...")
-        self.model.eval()
-        self.model.reset_metric()
-
+    def test_with_gt(self):
         with torch.no_grad():
             for batch_idx, batch in enumerate(tqdm(self.dataloader)):
                 inputs, target = batch
@@ -46,3 +43,25 @@ class Tester(object):
                 self.model.compute_metric(output, target.to(self.device))
 
         self.model.display_metric_value()
+
+    def test_without_gt(self):
+        output_dir = './output'
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        
+        with torch.no_grad():
+            for batch_idx, batch in enumerate(tqdm(self.dataloader)):
+                inputs = batch.to(self.device)
+                output = self.model(inputs).cpu()
+                output_name = str(batch_idx)+'_output.png'
+                save_image(output, os.path.join(output_dir, output_name))
+
+    def test(self):
+        print("Testing ...")
+        self.model.eval()
+        self.model.reset_metric()
+
+        if self.config.test_require_gt:
+            self.test_with_gt()
+        else:
+            self.test_without_gt()

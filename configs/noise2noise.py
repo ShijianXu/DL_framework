@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 
-from datasets.n2n_dataset import Noise2NoiseDataset
+from datasets.n2n_dataset import Noise2NoiseDataset, TestDataset
 import models.model_noise2noise
 
 # Model part
@@ -45,8 +45,13 @@ print("Construct test dataset with {} samples".format(len(valid_dataset)))
 
 
 # Test dataset & test dataloader (not paired, just some corrupted inputs)
-# test_dataset = xxx
-# test_dataloader = DataLoader()
+test_dataset = TestDataset('./data/DIV2K_test/noisy')
+test_dataloader = DataLoader(
+    test_dataset,
+    batch_size=1,
+    shuffle=False
+)
+test_require_gt = False
 
 
 # Loss and training part
