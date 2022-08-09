@@ -121,6 +121,7 @@ class TestDataset(Dataset):
         sample = {}
         sample['img'] = img
         sample['img_name'] = self.imgs[index]
+        print(sample['img_name'])
         return sample
 
     def __len__(self):
