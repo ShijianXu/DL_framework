@@ -1,5 +1,4 @@
 import torch
-import torch.nn as nn
 import utils
 from utils import PSNR
 from . import Abstract_Model
