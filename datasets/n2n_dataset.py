@@ -4,6 +4,7 @@ import os
 import random
 import numpy as np
 from string import ascii_letters
+from sys import platform
 from PIL import Image, ImageDraw, ImageFont
 from torch.utils.data import Dataset, DataLoader
 from torchvision.utils import save_image
@@ -87,7 +88,11 @@ class Noise2NoiseDataset(AbstractDataset):
         w, h = img.size
         c = len(img.getbands())
 
-        serif = 'Times New Roman.ttf'
+        if platform == 'linux':
+            serif = '/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf'
+        else:
+            serif = 'Times New Roman.ttf'
+        
         text_img = img.copy()
         text_draw = ImageDraw.Draw(text_img)
 
