@@ -1,8 +1,10 @@
 # https://github.com/joeylitalien/noise2noise-pytorch 
 
 import os
+import random
 import numpy as np
-from PIL import Image
+from string import ascii_letters
+from PIL import Image, ImageDraw, ImageFont
 from torch.utils.data import Dataset, DataLoader
 from torchvision.utils import save_image
 import torchvision.transforms.functional as tvF
@@ -78,9 +80,54 @@ class Noise2NoiseDataset(AbstractDataset):
         noise_img = np.clip(noise_img, 0, 255).astype(np.uint8)
         return Image.fromarray(noise_img)       # from numpy array => PIL
 
+    def _add_text_overlay(self, img):
+        """Adds text overlay to images."""
+        assert self.noise_param < 1, 'Text parameter is an occupancy probability'
+
+        w, h = img.size
+        c = len(img.getbands())
+
+        serif = 'Times New Roman.ttf'
+        text_img = img.copy()
+        text_draw = ImageDraw.Draw(text_img)
+
+        mask_img = Image.new('1', (w, h))
+        mask_draw = ImageDraw.Draw(mask_img)
+
+        # Random occupancy in range [0, p]
+        if self.seed:
+            random.seed(self.seed)
+            max_occupancy = self.noise_param
+        else:
+            max_occupancy = np.random.uniform(0, self.noise_param)
+
+        def get_occupancy(x):
+            y = np.array(x, dtype=np.uint8)
+            return np.sum(y) / y.size
+
+        # Add text overlay by choosing random text, length, color and position
+        while 1:
+            font = ImageFont.truetype(serif, np.random.randint(16, 21))
+            length = np.random.randint(10, 25)
+            chars = ''.join(random.choice(ascii_letters) for i in range(length))
+            color = tuple(np.random.randint(0, 255, c))
+            pos = (np.random.randint(0, w), np.random.randint(0, h))
+            text_draw.text(pos, chars, color, font=font)
+
+            # Update mask and check occupancy
+            mask_draw.text(pos, chars, 1, font=font)
+            if get_occupancy(mask_img) > max_occupancy:
+                break
+
+        return text_img
+
     def _corrupt(self, img):
         if self.noise_type in ['gaussian']:
             return self._add_noise(img)
+        elif self.noise_type == 'text':
+            return self._add_text_overlay(img)
+        else:
+            raise ValueError('Invalid noise type: {}'.format(self.noise_type))
 
     def __getitem__(self, index):
         img_path = os.path.join(self.root_dir, self.imgs[index])
@@ -106,6 +153,7 @@ class Noise2NoiseDataset(AbstractDataset):
 
         return source, target
 
+
 class TestDataset(Dataset):
     def __init__(self, root_dir) -> None:
         super(TestDataset, self).__init__()
@@ -128,8 +176,8 @@ class TestDataset(Dataset):
 
 
 if __name__ == '__main__':
-    save_dir = './data/DIV2K_test'
-    dataset = Noise2NoiseDataset('./data/DIV2K_valid_20', crop_size=256, clean_targets=True)
+    save_dir = './data/DIV2K_test_text'
+    dataset = Noise2NoiseDataset('./data/DIV2K_valid_20', crop_size=256, clean_targets=True, noise_dist=('text', 0.5))
     for idx, data in enumerate(dataset):
         print(idx)
         source_img = str(idx) + '_noisy.png'

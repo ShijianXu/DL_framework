@@ -45,7 +45,7 @@ print("Construct test dataset with {} samples".format(len(valid_dataset)))
 
 
 # Test dataset & test dataloader (not paired, just some corrupted inputs)
-test_dataset = TestDataset('./data/DIV2K_test/noisy')
+test_dataset = TestDataset('./data/DIV2K_test_gauss/noisy')
 test_dataloader = DataLoader(
     test_dataset,
     batch_size=1,
@@ -55,9 +55,9 @@ test_require_gt = False
 
 
 # Loss and training part
-num_epochs = 100
+num_epochs = 200
 learning_rate = 0.001
-loss = torch.nn.MSELoss()
+loss = torch.nn.L1Loss()
 optimizer = torch.optim.Adam(model.parameters(),
                              lr=learning_rate, 
                              betas=(0.9, 0.99),
