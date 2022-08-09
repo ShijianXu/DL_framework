@@ -110,7 +110,8 @@ class TestDataset(Dataset):
     def __init__(self, root_dir) -> None:
         super(TestDataset, self).__init__()
         
-        self.imgs = os.listdir(root_dir)
+        self.root_dir = root_dir
+        self.imgs = os.listdir(self.root_dir)
 
     def __getitem__(self, index):
         img_path = os.path.join(self.root_dir, self.imgs[index])
