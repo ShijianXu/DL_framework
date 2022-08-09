@@ -1,5 +1,4 @@
 import torch
-import torch.nn as nn
 from . import Abstract_Model
 
 class CLS_Model(Abstract_Model):
@@ -26,7 +25,7 @@ class CLS_Model(Abstract_Model):
         return 100 * self.correct // self.total
 
     def display_metric_value(self):
-        print(f'Validate accuracy: {self.get_metric_value()} %')
+        print(f'Accuracy: {self.get_metric_value()} %')
 
     def reset_metric(self):
         self.total = 0

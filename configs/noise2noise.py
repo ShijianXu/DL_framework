@@ -50,7 +50,7 @@ print("Construct test dataset with {} samples".format(len(valid_dataset)))
 
 
 # Loss and training part
-num_epochs = 30
+num_epochs = 50
 learning_rate = 0.001
 loss = torch.nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(),

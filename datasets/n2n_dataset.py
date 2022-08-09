@@ -107,16 +107,13 @@ class Noise2NoiseDataset(AbstractDataset):
         return source, target
 
 
-if __name__ == '__main__':
-    train_dataset = Noise2NoiseDataset('./data/DIV2K_train_80', crop_size=64)
-    train_dataloader = DataLoader(
-        train_dataset, 
-        batch_size=4, 
-        shuffle=True, 
-        num_workers=2
-    )
 
-    for batch_idx, batch in enumerate(train_dataloader):
-        source, target = batch
-        print(source.size(0))
-        break
+if __name__ == '__main__':
+    save_dir = './data/DIV2K_test'
+    dataset = Noise2NoiseDataset('./data/DIV2K_valid_20', crop_size=256, clean_targets=True)
+    for idx, data in enumerate(dataset):
+        print(idx)
+        source_img = str(idx) + '_noisy.png'
+        save_image(data[0], os.path.join(save_dir, source_img))
+        target_img = str(idx) + '_clean.png'
+        save_image(data[1], os.path.join(save_dir, target_img))
