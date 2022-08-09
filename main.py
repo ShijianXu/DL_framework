@@ -54,7 +54,7 @@ if __name__ == '__main__':
         tester = Tester(
             config=config,
             model=config.model,
-            dataloader=config.valid_dataloader,
+            dataloader=config.test_dataloader,
             ckpt_path=args.ckpt,
         )
         tester.test()
