@@ -53,8 +53,9 @@ class Tester(object):
             for batch_idx, batch in enumerate(tqdm(self.dataloader)):
                 inputs = batch['img'].to(self.device)
                 output = self.model(inputs).cpu()
-                inputs_name = batch['img_name']+'_noisy.png'
-                output_name = batch['img_name']+'_output.png'
+
+                inputs_name = batch['img_name'][0]+'_noisy.png'
+                output_name = batch['img_name'][0]+'_output.png'
                 save_image(inputs, os.path.join(output_dir, inputs_name))
                 save_image(output, os.path.join(output_dir, output_name))
 
