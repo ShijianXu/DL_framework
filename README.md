@@ -9,10 +9,11 @@
 
 ### Dense Prediction
 - [x] Noise2Noise (Gaussian noise)
+
+### Generative Model
 - [ ] VAE
 - [ ] DDPM
-
-### GAN
+- [ ] GAN
 
 
 ## TODO
