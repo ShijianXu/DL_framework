@@ -117,7 +117,11 @@ class TestDataset(Dataset):
         img_path = os.path.join(self.root_dir, self.imgs[index])
         img = Image.open(img_path).convert('RGB')
         img = tvF.to_tensor(img)
-        return img
+
+        sample = {}
+        sample['img'] = img
+        sample['img_name'] = self.imgs[index]
+        return sample
 
     def __len__(self):
         return len(self.imgs)
