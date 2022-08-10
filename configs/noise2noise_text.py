@@ -55,7 +55,7 @@ test_require_gt = False
 
 
 # Loss and training part
-num_epochs = 300
+num_epochs = 500
 learning_rate = 0.001
 loss = torch.nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(),

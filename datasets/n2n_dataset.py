@@ -1,4 +1,4 @@
-# https://github.com/joeylitalien/noise2noise-pytorch 
+# code from: https://github.com/joeylitalien/noise2noise-pytorch/blob/master/src/datasets.py
 
 import os
 import random
