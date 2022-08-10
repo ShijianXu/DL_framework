@@ -1,4 +1,7 @@
 # code from: https://github.com/joeylitalien/noise2noise-pytorch/blob/master/src/unet.py
+# This implementation is not strictly follow the original paper, especially the upsample and activations
+
+# Another UNet implementation: https://amaarora.github.io/2020/09/13/unet.html
 
 import torch
 import torch.nn as nn
