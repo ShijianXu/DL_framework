@@ -1,5 +1,6 @@
 import torch
 import utils
+from utils import PSNR
 from . import Abstract_Model
 
 class VanillaVAE(Abstract_Model):
@@ -19,16 +20,16 @@ class VanillaVAE(Abstract_Model):
         recons, mu, logvar = output[0], output[1], output[2]
         return criterion(recons, source, mu, logvar, kld_weight=1)
 
-    def compute_metric(self, output, target):
+    def compute_metric(self, source, output, target):
         """Computes PSNR value"""
 
         batch_size = output.size(0)
         output = output.cpu()
-        target = target.cpu()
+        source = source.cpu()
 
         with torch.no_grad():
             for i in range(batch_size):
-                psnr_value = PSNR(output[i], target[i]).item()
+                psnr_value = PSNR(output[i], source[i]).item()
                 self.psnr_m.update(psnr_value)
 
     def get_metric_value(self):
