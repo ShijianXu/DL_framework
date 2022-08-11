@@ -150,22 +150,27 @@ class Trainer(object):
         return losses_v.avg
 
     def _on_valid_end(self, epoch):
-        # TODO: to sample
         test_input, _ = next(iter(self.val_dataloader))
         test_input = test_input.to(self.device)
         
         recons = self.model.generate(test_input)
+        recons_dir = os.path.join(self.log_dir, "Recons")
+        if not os.path.exists(recons_dir):
+            os.makedirs(recons_dir)
+
         save_image(recons.data,
-            os.path.join(self.log_dir, 
-            "Reconstructions", 
+            os.path.join(recons_dir,
             f"Epoch_{epoch}.png"),
             normalize=True,
             nrow=12)
 
         samples = self.model.sample(144, self.device)
+        samples_dir = os.path.join(self.log_dir, "Samples")
+        if not os.path.exists(samples_dir):
+            os.makedirs(samples_dir)
+
         save_image(samples.cpu().data,
-            os.path.join(self.log_dir , 
-            "Samples",      
+            os.path.join(samples_dir,
             f"Epoch_{epoch}.png"),
             normalize=True,
             nrow=12)
