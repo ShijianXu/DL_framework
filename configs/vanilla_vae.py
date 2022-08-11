@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 
-from datasets.celeba_dataset import MyCelebA
+from datasets.celeba_dataset import MyCelebA, TinyCelebA
 from losses import VAE_Loss
 import models.model_vanilla_vae
 
@@ -40,12 +40,17 @@ train_transforms = transforms.Compose([
     transforms.Resize(64),
     transforms.ToTensor(),
 ])
-train_dataset = MyCelebA(
-    './data/', 
-    split='train',
-    transform=train_transforms,
-    download=False,
+train_dataset = TinyCelebA(
+    './data/celeba/img_align_celeba',
+    sample_nums=10000,
+    transform=train_transforms
 )
+# train_dataset = MyCelebA(
+#     './data/', 
+#     split='train',
+#     transform=train_transforms,
+#     download=False,
+# )
 train_dataloader = DataLoader(
     train_dataset, 
     batch_size=4, 
