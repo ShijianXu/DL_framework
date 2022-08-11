@@ -12,7 +12,7 @@
 - [x] Noise2Noise (Text overlay, results not very good)
 
 ### Generative Model
-- [ ] VAE
+- [ ] Vanilla VAE
 - [ ] DDPM
 - [ ] GAN
 

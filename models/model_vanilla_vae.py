@@ -21,10 +21,24 @@ class VanillaVAE(Abstract_Model):
         return criterion(recons, source, mu, logvar, kld_weight=0.00025)
 
     def sample(self, num_samples, device):
+        """
+        Samples from the latent space and return the corresponding image space map.
+        :param num_samples: (Int) Number of samples
+        :param current_device: (Int) Device to run the model
+        :return: (Tensor)
+        """
         z = torch.randn(num_samples, self.backend.latent_dim)
         z = z.to(device)
         samples = self.backend.sample(z)
         return samples
+
+    def generate(self, x):
+        """
+        Given an input image x, returns the reconstructed image
+        :param x: (Tensor) [B x C x H x W]
+        :return: (Tensor) [B x C x H x W
+        """
+        return self.forward(x)[0]
 
     def compute_metric(self, source, output, target):
         """Computes PSNR value"""
