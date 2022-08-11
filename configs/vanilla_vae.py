@@ -74,9 +74,9 @@ valid_dataset = MyCelebA(
 )
 valid_dataloader = DataLoader(
     valid_dataset, 
-    batch_size=1, 
+    batch_size=4, 
     shuffle=False, 
-    num_workers=1
+    num_workers=2
 )
 print("Construct test dataset with {} samples".format(len(valid_dataset)))
 
