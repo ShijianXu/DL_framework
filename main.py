@@ -3,6 +3,7 @@ import importlib
 
 from trainers import Trainer
 from tester import Tester
+from sampler import Sampler
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser("Deep Learning Framework", formatter_class=argparse.RawTextHelpFormatter)
@@ -50,7 +51,7 @@ if __name__ == '__main__':
         )
         trainer.train()
 
-    else:
+    elif args.mode == 'test':
         tester = Tester(
             config=config,
             model=config.model,
@@ -58,3 +59,15 @@ if __name__ == '__main__':
             ckpt_path=args.ckpt,
         )
         tester.test()
+
+    elif args.mode == 'sample':
+        sampler = Sampler(
+            config=config,
+            model=config.model,
+            latent_dim=config.latent_dim,
+            ckpt_path=args.ckpt,
+        )
+        sampler.sample(sample_num=144)
+
+    else:
+        raise NotImplementedError("Test model not supported!")

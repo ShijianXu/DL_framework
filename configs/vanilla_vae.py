@@ -7,11 +7,13 @@ from losses import VAE_Loss
 import models.model_vanilla_vae
 
 # Model part
+latent_dim = 128
+
 backbone = {}
 backbone["name"] = "models.backbone_vae_encoder.VAE_Encoder"
 backbone["config"] = {
     "in_channels": 3, 
-    "latent_dim": 128,
+    "latent_dim": latent_dim,
     "hidden_dims": [32, 64, 128, 256, 512]
 }
 
@@ -19,7 +21,7 @@ backend = {}
 backend["name"] = "models.backend_vae_decoder.VAE_Decoder"
 backend["config"] = {
     "out_channels": 3, 
-    "latent_dim": 128,
+    "latent_dim": latent_dim,
     "hidden_dims": [32, 64, 128, 256, 512]
 }
 
@@ -78,21 +80,6 @@ valid_dataloader = DataLoader(
     num_workers=2
 )
 print("Construct test dataset with {} samples".format(len(valid_dataset)))
-
-
-# Test dataset & test dataloader (not paired, just some corrupted inputs)
-test_dataset = MyCelebA(
-    './data/', 
-    split='test',
-    transform=valid_transforms,
-    download=False,
-)
-test_dataloader = DataLoader(
-    test_dataset,
-    batch_size=1,
-    shuffle=False
-)
-test_require_gt = False
 
 
 # Loss and training part
