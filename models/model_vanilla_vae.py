@@ -18,7 +18,7 @@ class VanillaVAE(Abstract_Model):
     def compute_loss(self, source, output, target, criterion):
         """ Target is not used for VAE loss """
         recons, mu, logvar = output[0], output[1], output[2]
-        return criterion(recons, source, mu, logvar, kld_weight=1)
+        return criterion(recons, source, mu, logvar, kld_weight=0.00025)
 
     def sample(self, num_samples, device):
         z = torch.randn(num_samples, self.backend.latent_dim)

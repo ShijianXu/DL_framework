@@ -61,7 +61,6 @@ print("Construct train dataset with {} samples".format(len(train_dataset)))
 
 
 valid_transforms = transforms.Compose([
-    transforms.RandomHorizontalFlip(),
     transforms.CenterCrop(148),
     transforms.Resize(64),
     transforms.ToTensor(),
@@ -98,12 +97,11 @@ test_require_gt = False
 
 # Loss and training part
 valid_sample = True
-num_epochs = 500
-learning_rate = 0.001
+num_epochs = 100
+learning_rate = 0.005
 loss = VAE_Loss()
 optimizer = torch.optim.Adam(model.parameters(),
-                             lr=learning_rate, 
-                             betas=(0.9, 0.99),
-                             eps=1e-8)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer,
-                patience=num_epochs/4, factor=0.5, verbose=True)
+                             lr=learning_rate,
+                             weight_decay=0.0
+                             )
+scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
