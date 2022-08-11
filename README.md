@@ -9,6 +9,7 @@
 
 ### Dense Prediction
 - [x] Noise2Noise (Gaussian noise)
+- [x] Noise2Noise (Text overlay, results not very good)
 
 ### Generative Model
 - [ ] VAE

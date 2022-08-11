@@ -12,8 +12,6 @@ class VAE_Encoder(nn.Module):
     ):
         super(VAE_Encoder, self).__init__()
 
-        self.latent_dim = latent_dim
-
         modules = []
         if hidden_dims is None:
             hidden_dims = [32, 64, 128, 256, 512]
