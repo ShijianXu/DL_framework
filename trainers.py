@@ -96,14 +96,24 @@ class Trainer(object):
         self.optimizer.zero_grad()
 
         source, target = batch
-        outputs = self.model(source.to(self.device))
-        loss = self.criterion(outputs, target.to(self.device))
-        self.writer.add_scalar("Train/Loss", loss.item(), self.total_steps)
-        self.losses_m.update(loss.item(), source.size(0))
+        source = source.to(self.device)
+        target = target.to(self.device)
+        output = self.model(source)
+
+        # The returned loss is a dict
+        loss = self.model.compute_loss(source, output, target, self.criterion)        
+        self.log_scalar(loss, self.total_steps, prefix='Train')
+
+        self.losses_m.update(loss['loss'].item(), source.size(0))
         
         loss.backward()
         self.optimizer.step()
         self.total_steps += 1
+
+    def log_scalar(self, s_dict, step, prefix='Train'):
+        for item in s_dict:
+            item_name = prefix + '/' + item
+            self.writer.add_scalar(item_name, s_dict[item].item(), step)
 
     def validate(self, epoch):
         self.model.eval()

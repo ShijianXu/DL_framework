@@ -27,17 +27,8 @@ if __name__ == "__main__":
         transform=train_transforms,
         download=False,
     )
-
-    val_transforms = transforms.Compose([
-        transforms.RandomHorizontalFlip(),
-        transforms.CenterCrop(148),
-        transforms.Resize(64),
-        transforms.ToTensor(),
-    ])
-    val_dataset = MyCelebA(
-        './data/', 
-        split='test',
-        transform=val_transforms,
-        download=False,
-    )
-    print(len(val_dataset))
+    
+    for idx, data in enumerate(train_dataset):
+        print(len(data))
+        print(data[0].shape, data[1].shape)
+        break

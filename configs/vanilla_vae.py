@@ -3,6 +3,7 @@ from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 
 from datasets.celeba_dataset import MyCelebA
+from losses import VAE_Loss
 import models.model_vanilla_vae
 
 # Model part
@@ -93,7 +94,7 @@ test_require_gt = False
 # Loss and training part
 num_epochs = 500
 learning_rate = 0.001
-loss = torch.nn.MSELoss()
+loss = VAE_Loss()
 optimizer = torch.optim.Adam(model.parameters(),
                              lr=learning_rate, 
                              betas=(0.9, 0.99),
