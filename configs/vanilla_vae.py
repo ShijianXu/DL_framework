@@ -92,6 +92,7 @@ test_require_gt = False
 
 
 # Loss and training part
+valid_sample = True
 num_epochs = 500
 learning_rate = 0.001
 loss = VAE_Loss()

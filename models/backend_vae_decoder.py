@@ -11,6 +11,7 @@ class VAE_Decoder(nn.Module):
         hidden_dims: List=None
     ):
         super(VAE_Decoder, self).__init__()
+        self.latent_dim = latent_dim
 
         modules = []
         if hidden_dims is None:
@@ -50,6 +51,11 @@ class VAE_Decoder(nn.Module):
         out = self.decoder(z)
         out = self.final_layer(out)
         return [out, mu, logvar]
+
+    def sample(self, z):
+        z = self.decoder_input(z).view(-1, 512, 2, 2)
+        out = self.decoder(z)
+        out = self.final_layer(out)
 
 if __name__ == '__main__':
     model = VAE_Decoder()

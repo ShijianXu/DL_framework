@@ -139,7 +139,16 @@ class Trainer(object):
         self.writer.add_scalar("Valid/Metric", self.model.get_metric_value(), epoch)
 
         self.model.display_metric_value()
+
+        if hasattr(self.config, 'valid_sample'):
+            if self.config.valid_sample:
+                self._on_valid_end(epoch)
+
         return losses_v.avg
+
+    def _on_valid_end(self, epoch):
+        # TODO: to sample
+        pass
 
     def resume_ckpt(self, ckpt_path):
         checkpoint = torch.load(ckpt_path, map_location=self.device)

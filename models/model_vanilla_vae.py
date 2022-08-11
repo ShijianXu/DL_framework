@@ -20,6 +20,12 @@ class VanillaVAE(Abstract_Model):
         recons, mu, logvar = output[0], output[1], output[2]
         return criterion(recons, source, mu, logvar, kld_weight=1)
 
+    def sample(self, num_samples, device):
+        z = torch.randn(num_samples, self.backend.latent_dim)
+        z = z.to(device)
+        samples = self.backend.sample(z)
+        return samples
+
     def compute_metric(self, source, output, target):
         """Computes PSNR value"""
 
