@@ -158,22 +158,16 @@ class Trainer(object):
         if not os.path.exists(recons_dir):
             os.makedirs(recons_dir)
 
-        save_image(recons.data,
-            os.path.join(recons_dir,
-            f"Epoch_{epoch}.png"),
-            normalize=True,
-            nrow=12)
+        save_image(recons.data, os.path.join(recons_dir, f"Epoch_{epoch}.png"),
+            normalize=True, nrow=12)
 
         samples = self.model.sample(144, self.device)
         samples_dir = os.path.join(self.log_dir, "Samples")
         if not os.path.exists(samples_dir):
             os.makedirs(samples_dir)
 
-        save_image(samples.cpu().data,
-            os.path.join(samples_dir,
-            f"Epoch_{epoch}.png"),
-            normalize=True,
-            nrow=12)
+        save_image(samples.cpu().data, os.path.join(samples_dir, f"Epoch_{epoch}.png"),
+            normalize=True, nrow=12)
 
     def resume_ckpt(self, ckpt_path):
         checkpoint = torch.load(ckpt_path, map_location=self.device)
