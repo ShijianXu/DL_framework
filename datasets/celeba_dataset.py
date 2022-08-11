@@ -33,7 +33,7 @@ class TinyCelebA(Dataset):
         if self.transform is not None:
             x = self.transform(x)
 
-        target = None
+        target = 1
         return x, target
 
     def __len__(self):
