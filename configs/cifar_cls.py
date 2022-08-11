@@ -46,6 +46,15 @@ train_dataloader = DataLoader(
 )
 print("Construct train dataset with {} samples".format(len(train_dataset)))
 
+valid_dataset = torchvision.datasets.CIFAR10('data', train=False, download=True, transform=transform)
+valid_dataloader = DataLoader(
+    valid_dataset, 
+    batch_size=4, 
+    shuffle=True, 
+    num_workers=2
+)
+print("Construct test dataset with {} samples".format(len(valid_dataset)))
+
 test_dataset = torchvision.datasets.CIFAR10('data', train=False, download=True, transform=transform)
 test_dataloader = DataLoader(
     test_dataset, 
@@ -53,7 +62,6 @@ test_dataloader = DataLoader(
     shuffle=True, 
     num_workers=2
 )
-print("Construct test dataset with {} samples".format(len(test_dataset)))
 
 # Loss and training part
 learning_rate = 0.001

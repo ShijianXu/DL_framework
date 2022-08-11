@@ -40,7 +40,7 @@ class VAE_Decoder(nn.Module):
 
     def reparameterize(self, mu, logvar):
         std = torch.exp(0.5 * logvar)
-        eps = torch.randn_like(std)
+        eps = torch.randn_like(std)  # from a normal distribution with mean 0 and variance 1
         return eps * std + mu
 
     def forward(self, input):
@@ -49,7 +49,7 @@ class VAE_Decoder(nn.Module):
         z = self.decoder_input(z).view(-1, 512, 2, 2)
         out = self.decoder(z)
         out = self.final_layer(out)
-        return out
+        return [out, mu, logvar]
 
 if __name__ == '__main__':
     model = VAE_Decoder()
