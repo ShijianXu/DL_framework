@@ -28,14 +28,15 @@ class VanillaVAE(Abstract_Model):
 
     def compute_metric(self, source, output, target):
         """Computes PSNR value"""
+        recons, mu, logvar = output[0], output[1], output[2]
 
-        batch_size = output.size(0)
-        output = output.cpu()
+        batch_size = recons.size(0)
+        recons = recons.cpu()
         source = source.cpu()
 
         with torch.no_grad():
             for i in range(batch_size):
-                psnr_value = PSNR(output[i], source[i]).item()
+                psnr_value = PSNR(recons[i], source[i]).item()
                 self.psnr_m.update(psnr_value)
 
     def get_metric_value(self):
