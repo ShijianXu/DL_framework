@@ -56,6 +56,7 @@ class VAE_Decoder(nn.Module):
         z = self.decoder_input(z).view(-1, 512, 2, 2)
         out = self.decoder(z)
         out = self.final_layer(out)
+        return out
 
 if __name__ == '__main__':
     model = VAE_Decoder()
