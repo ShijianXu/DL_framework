@@ -1,26 +1,35 @@
 import torch
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
+
 from datasets.celeba_dataset import MyCelebA
+import models.model_vanilla_vae
 
 # Model part
 backbone = {}
-backbone["name"] = None
+backbone["name"] = "models.backbone_vae_encoder.VAE_Encoder"
 backbone["config"] = {
-    "in_channels": 3,
-    "out_channels": 3
+    "in_channels": 3, 
+    "latent_dim": 128,
+    "hidden_dims": [32, 64, 128, 256, 512]
 }
 
-backend = torch.nn.Identity()
+backend = {}
+backend["name"] = "models.backend_vae_decoder.VAE_Decoder"
+backend["config"] = {
+    "out_channels": 3, 
+    "latent_dim": 128,
+    "hidden_dims": [32, 64, 128, 256, 512]
+}
+
 model_config = {
     "backbone": backbone,
     "backend": backend,
     "backbone_created": False,
-    "backend_created": True,
+    "backend_created": False,
 }
-
-# model = models.model_noise2noise.Noise2Noise(**model_config)
-# print(f"Total model parameters: {model.get_num_params()}")
+model = models.model_vanilla_vae.VanillaVAE(**model_config)
+print(f"Total model parameters: {model.get_num_params()}")
 
 
 # Data part
