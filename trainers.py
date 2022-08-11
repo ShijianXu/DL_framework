@@ -86,7 +86,8 @@ class Trainer(object):
             print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
 
             if self.scheduler is not None:
-                self.scheduler.step(valid_loss)
+                # self.scheduler.step(valid_loss)
+                self.scheduler.step()
 
             lr = self.optimizer.param_groups[0]["lr"]
             self.writer.add_scalar("Train/Learning rate", lr, epoch)
