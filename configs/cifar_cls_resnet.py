@@ -62,6 +62,7 @@ test_dataloader = DataLoader(
     shuffle=True, 
     num_workers=2
 )
+test_require_gt = True
 
 # Loss and training part
 learning_rate = 0.0001
