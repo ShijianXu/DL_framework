@@ -52,7 +52,7 @@ class Abstract_Model(nn.Module):
             
         return {"loss": loss}
 
-    def compute_metric(self, output, target):
+    def compute_metric(self, source, output, target):
         raise NotImplementedError("Abstract method not implemented.")
 
     def get_metric_value(self):

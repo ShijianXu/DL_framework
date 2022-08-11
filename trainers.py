@@ -124,16 +124,20 @@ class Trainer(object):
         with torch.no_grad():
             for batch_idx, batch in enumerate(tqdm(self.val_dataloader)):
                 source, target = batch
-                output = self.model(source.to(self.device))
-                loss = self.criterion(output, target.to(self.device))
-                losses_v.update(loss.item(), source.size(0))
+                source = source.to(self.device)
+                target = target.to(self.device)
+
+                output = self.model(source)
+                losses = self.model.compute_loss(source, output, target, self.criterion)                 
+                losses_v.update(losses['loss'].item(), source.size(0))
 
                 # accuracy for classification
                 # PSNR for dense prediction
-                self.model.compute_metric(output, target.to(self.device))
+                self.model.compute_metric(source, output, target)
 
         self.writer.add_scalar("Valid/Loss", losses_v.avg, epoch)
         self.writer.add_scalar("Valid/Metric", self.model.get_metric_value(), epoch)
+
         self.model.display_metric_value()
         return losses_v.avg
 
