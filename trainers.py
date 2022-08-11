@@ -3,6 +3,7 @@ import torch
 from tqdm import tqdm
 import utils
 from torch.utils.tensorboard import SummaryWriter
+from torchvision.utils import save_image
 
 class Trainer(object):
     def __init__(self,
@@ -143,13 +144,32 @@ class Trainer(object):
 
         if hasattr(self.config, 'valid_sample'):
             if self.config.valid_sample:
+                print("Validation sampling ...")
                 self._on_valid_end(epoch)
 
         return losses_v.avg
 
     def _on_valid_end(self, epoch):
         # TODO: to sample
-        pass
+        test_input, _ = next(iter(self.val_dataloader()))
+        test_input = test_input.to(self.device)
+        
+        recons = self.model.generate(test_input)
+        save_image(recons.data,
+            os.path.join(self.log_dir, 
+            "Reconstructions", 
+            f"Epoch_{epoch}.png"),
+            normalize=True,
+            nrow=12)
+
+        samples = self.model.sample(144, self.device)
+        save_image(samples.cpu().data,
+            os.path.join(self.log_dir , 
+            "Samples",      
+            f"Epoch_{epoch}.png"),
+            normalize=True,
+            nrow=12)
+
 
     def resume_ckpt(self, ckpt_path):
         checkpoint = torch.load(ckpt_path, map_location=self.device)
