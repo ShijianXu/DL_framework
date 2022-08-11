@@ -1,4 +1,4 @@
 python main.py \
     --mode test \
-    --config configs/noise2noise_text.py \
-    --ckpt ./logs/noise2noise_text/checkpoints/checkpoint_latest.pth
+    --config configs/cifar_cls_resnet.py \
+    --ckpt ./logs/cifar_cls_resnet/checkpoints/checkpoint_latest.pth
