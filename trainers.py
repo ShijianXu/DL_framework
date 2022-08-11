@@ -101,12 +101,12 @@ class Trainer(object):
         output = self.model(source)
 
         # The returned loss is a dict
-        loss = self.model.compute_loss(source, output, target, self.criterion)        
-        self.log_scalar(loss, self.total_steps, prefix='Train')
+        losses = self.model.compute_loss(source, output, target, self.criterion)        
+        self.log_scalar(losses, self.total_steps, prefix='Train')
 
-        self.losses_m.update(loss['loss'].item(), source.size(0))
+        self.losses_m.update(losses['loss'].item(), source.size(0))
         
-        loss.backward()
+        losses['loss'].backward()
         self.optimizer.step()
         self.total_steps += 1
 
