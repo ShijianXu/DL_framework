@@ -151,7 +151,7 @@ class Trainer(object):
 
     def _on_valid_end(self, epoch):
         # TODO: to sample
-        test_input, _ = next(iter(self.val_dataloader()))
+        test_input, _ = next(iter(self.val_dataloader))
         test_input = test_input.to(self.device)
         
         recons = self.model.generate(test_input)
@@ -169,7 +169,6 @@ class Trainer(object):
             f"Epoch_{epoch}.png"),
             normalize=True,
             nrow=12)
-
 
     def resume_ckpt(self, ckpt_path):
         checkpoint = torch.load(ckpt_path, map_location=self.device)
