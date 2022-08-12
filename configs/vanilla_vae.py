@@ -83,7 +83,7 @@ print("Construct test dataset with {} samples".format(len(valid_dataset)))
 
 
 # Loss and training part
-valid_sample = True
+valid_sample = True     # sample after each epoch validation
 num_epochs = 100
 learning_rate = 0.005
 loss = VAE_Loss()
