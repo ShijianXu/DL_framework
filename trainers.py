@@ -91,7 +91,7 @@ class Trainer(object):
                 self.scheduler.step()
 
             lr = self.optimizer.param_groups[0]["lr"]
-            self.writer.add_scalar("Train/Learning rate", lr, epoch)
+            self.log_scalar("Train/Learning rate", lr, epoch)
 
     def process_batch(self, batch):
         self.model.train()
@@ -103,19 +103,16 @@ class Trainer(object):
         output = self.model(source)
 
         # The returned loss is a dict
-        losses = self.model.compute_loss(source, output, target, self.criterion)        
-        self.log_scalar(losses, self.total_steps, prefix='Train')
+        losses = self.model.compute_loss(source, output, target, self.criterion)     
+
+        for key, val in losses.items():
+            self.log_scalar(f"Train/{key}", val.item(), self.total_steps)
 
         self.losses_m.update(losses['loss'].item(), source.size(0))
         
         losses['loss'].backward()
         self.optimizer.step()
         self.total_steps += 1
-
-    def log_scalar(self, s_dict, step, prefix='Train'):
-        for item in s_dict:
-            item_name = prefix + '/' + item
-            self.writer.add_scalar(item_name, s_dict[item].item(), step)
 
     def validate(self, epoch):
         self.model.eval()
@@ -130,16 +127,15 @@ class Trainer(object):
                 target = target.to(self.device)
 
                 output = self.model(source)
-                losses = self.model.compute_loss(source, output, target, self.criterion)                 
+                losses = self.model.compute_loss(source, output, target, self.criterion)
                 losses_v.update(losses['loss'].item(), source.size(0))
 
                 # accuracy for classification
                 # PSNR for dense prediction
                 self.model.compute_metric(source, output, target)
 
-        self.writer.add_scalar("Valid/Loss", losses_v.avg, epoch)
-        self.writer.add_scalar("Valid/Metric", self.model.get_metric_value(), epoch)
-
+        self.log_scalar("Valid/Loss", losses_v.avg, epoch)
+        self.log_scalar("Valid/Metric", self.model.get_metric_value(), epoch)
         self.model.display_metric_value()
 
         if hasattr(self.config, 'valid_sample'):
@@ -168,6 +164,9 @@ class Trainer(object):
 
         save_image(samples.cpu().data, os.path.join(samples_dir, f"Epoch_{epoch}.png"),
             normalize=True, nrow=12)
+
+    def log_scalar(self, name, value, step):
+        self.writer.add_scalar(name, value, step)
 
     def resume_ckpt(self, ckpt_path):
         checkpoint = torch.load(ckpt_path, map_location=self.device)
