@@ -5,13 +5,23 @@ import torch.nn as nn
 from einops import rearrange
 from einops.layers.torch import Rearrange
 
-from utils import pair
+from utils import pair, posemb_sincos_2d
+
+
+class Transformer(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        pass
+
 
 class SimpleViT(nn.Module):
     def __init__(self,
         *,
         image_size,
         patch_size,
+        num_classes,
         dim,
         depth,
         heads,
@@ -34,7 +44,25 @@ class SimpleViT(nn.Module):
             nn.Linear(patch_dim, dim)
         )
 
-        
+        self.transformer = Transformer(dim, depth, heads, dim_head, mlp_dim)
 
-    def forward(self, x):
-        pass
+        self.to_latent = nn.Identity()
+
+        self.linear_head = nn.Sequential(
+            nn.LayerNorm(dim),
+            nn.Linear(dim, num_classes)
+        )
+
+    def forward(self, img):
+        *_, h, w, dtype = *img.shape, img.dtype
+
+        x = self.to_patch_embedding(img)
+        pe = posemb_sincos_2d(x)
+        x = rearrange(x, 'b ... d -> b (...) d') + pe
+
+        x = self.transformer(x)
+        x = x.mean(dim = 1)
+
+        x = self.to_latent(x)
+
+        return self.linear_head(x)
