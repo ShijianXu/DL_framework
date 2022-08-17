@@ -75,7 +75,7 @@ learning_rate = 0.001
 num_epochs = 50
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
-#optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer,
 #                 patience=num_epochs/4, factor=0.5, verbose=True)
+scheduler_name = 'ReduceLROnPlateau'
 scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
