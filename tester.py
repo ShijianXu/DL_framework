@@ -39,8 +39,10 @@ class Tester(object):
         with torch.no_grad():
             for batch_idx, batch in enumerate(tqdm(self.dataloader)):
                 inputs, target = batch
-                output = self.model(inputs.to(self.device))
-                self.model.compute_metric(output, target.to(self.device))
+                inputs = inputs.to(self.device)
+                target = target.to(self.device)
+                output = self.model(inputs)
+                self.model.compute_metric(inputs, output, target)
 
         self.model.display_metric_value()
 
