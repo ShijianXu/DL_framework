@@ -5,7 +5,7 @@
 - [x] MLP
 - [x] Simple CNN
 - [x] Torchvision ResNet
-- [ ] SimpleViT
+- [x] SimpleViT
 
 ### Dense Prediction
 - [x] Noise2Noise (Gaussian noise)

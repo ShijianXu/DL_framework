@@ -20,6 +20,9 @@ if __name__ == '__main__':
         "--auto_resume", type=bool, default=True, help="Whether to check and load the latest checkpoint from log dir."
     )
     parser.add_argument(
+        "--resume_optimizer", type=bool, default=True, help="Whether to resume the optimizer state."
+    )
+    parser.add_argument(
         "--ckpt", type=str, help="Path to the test checkpoint."
     )
     parser.add_argument(
@@ -48,6 +51,7 @@ if __name__ == '__main__':
             print_freq=args.print_freq,
             log_dir=args.log,
             resume=args.auto_resume,
+            resume_optimizer=args.resume_optimizer
         )
         trainer.train()
 

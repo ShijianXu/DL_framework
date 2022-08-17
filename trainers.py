@@ -18,6 +18,7 @@ class Trainer(object):
         print_freq=400,
         log_dir='./logs',
         resume=True,
+        resume_optimizer=True,
         log_tool='tensorboard'
     ):
         self.config = config
@@ -34,6 +35,7 @@ class Trainer(object):
         self.print_freq = print_freq
         self.log_dir = log_dir
         self.resume = resume
+        self.resume_optimizer = resume_optimizer
 
         # init logger
         if log_tool == 'tensorboard':
@@ -174,7 +176,8 @@ class Trainer(object):
         checkpoint = torch.load(ckpt_path, map_location=self.device)
         self.model.load_state_dict(checkpoint['state_dict'])
         self.start_epoch = checkpoint['epoch']
-        self.optimizer.load_state_dict(checkpoint['optimizer'])
+        if self.resume_optimizer:
+            self.optimizer.load_state_dict(checkpoint['optimizer'])
         print("=> Resumed checkpoint '{}'".format(ckpt_path))
 
     def save_checkpoint(self, epoch, filename='checkpoint_latest.pth'):
