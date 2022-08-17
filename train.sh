@@ -1,4 +1,4 @@
 python main.py \
     --mode train \
-    --config configs/vanilla_vae.py \
-    --log ./logs/vanilla_vae
+    --config configs/cifar_cls_simplevit.py \
+    --log ./logs/cifar_cls_simplevit
