@@ -15,7 +15,7 @@ class Noise2Noise(Abstract_Model):
         # for test/val
         self.psnr_m = utils.AverageMeter()
 
-    def compute_metric(self, output, target):
+    def compute_metric(self, source, output, target):
         """Computes PSNR value"""
 
         batch_size = output.size(0)

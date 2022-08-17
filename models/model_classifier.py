@@ -14,7 +14,7 @@ class CLS_Model(Abstract_Model):
         self.total = 0
         self.correct = 0
 
-    def compute_metric(self, output, target):
+    def compute_metric(self, source, output, target):
         """Computes the accuracy over the k top predictions for the specified values of k"""
         with torch.no_grad():
             self.total += target.size(0)
