@@ -10,13 +10,13 @@ import models.model_classifier
 backbone = {}
 backbone["name"] = "models.backbone_simplevit.SimpleViT"
 backbone["config"] = {
-    "image_size": 256,
-    "patch_size": 32,
+    "image_size": 32,
+    "patch_size": 4,
     "num_classes": 10,
-    "dim": 1024,
+    "dim": 128,
     "depth": 6,
-    "heads": 16,
-    "mlp_dim": 2048
+    "heads": 8,
+    "mlp_dim": 256
 }
 backend = torch.nn.Identity()
 
