@@ -87,8 +87,10 @@ class Trainer(object):
             print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
 
             if self.scheduler is not None:
-                # self.scheduler.step(valid_loss)
-                self.scheduler.step()
+                if hasattr(self.config, 'scheduler_name') and self.config.scheduler_name == 'ReduceLROnPlateau':
+                    self.scheduler.step(valid_loss)
+                else:
+                    self.scheduler.step()
 
             lr = self.optimizer.param_groups[0]["lr"]
             self.log_scalar("Train/Learning rate", lr, epoch)
