@@ -71,7 +71,7 @@ test_dataloader = DataLoader(
 test_require_gt = True
 
 # Loss and training part
-learning_rate = 0.001
+learning_rate = 0.0001
 num_epochs = 200
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
