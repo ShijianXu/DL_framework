@@ -13,10 +13,10 @@ backbone["config"] = {
     "image_size": 32,
     "patch_size": 4,
     "num_classes": 10,
-    "dim": 128,
+    "dim": 512,
     "depth": 6,
     "heads": 8,
-    "mlp_dim": 256
+    "mlp_dim": 512
 }
 backend = torch.nn.Identity()
 
@@ -76,8 +76,9 @@ num_epochs = 200
 loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), learning_rate)
 
-scheduler_name = 'ReduceLROnPlateau'
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer,
-                patience=num_epochs/4, factor=0.5, verbose=True)
+# scheduler_name = 'ReduceLROnPlateau'
+# scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer,
+#                 patience=num_epochs/4, factor=0.5, verbose=True)
 
-# scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
+scheduler_name = 'CosineAnnealingLR'
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, num_epochs)

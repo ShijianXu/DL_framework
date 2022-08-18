@@ -91,6 +91,8 @@ class Trainer(object):
             if self.scheduler is not None:
                 if hasattr(self.config, 'scheduler_name') and self.config.scheduler_name == 'ReduceLROnPlateau':
                     self.scheduler.step(valid_loss)
+                elif hasattr(self.config, 'scheduler_name') and self.config.scheduler_name == 'CosineAnnealingLR':
+                    self.scheduler.step(epoch)
                 else:
                     self.scheduler.step()
 
