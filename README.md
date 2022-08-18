@@ -6,6 +6,7 @@
 - [x] Simple CNN
 - [x] Torchvision ResNet
 - [x] SimpleViT
+- [ ] ConvMixer
 
 ### Dense Prediction
 - [x] Noise2Noise (Gaussian noise)
