@@ -39,9 +39,9 @@ transform_train = transforms.Compose([
 train_dataset = torchvision.datasets.CIFAR10('data', train=True, download=True, transform=transform_train)
 train_dataloader = DataLoader(
     train_dataset, 
-    batch_size=16, 
+    batch_size=512, 
     shuffle=True, 
-    num_workers=8
+    num_workers=16
 )
 print("Construct train dataset with {} samples".format(len(train_dataset)))
 
