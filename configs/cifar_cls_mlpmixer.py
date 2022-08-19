@@ -8,7 +8,7 @@ import models.model_classifier
 
 # Model part
 backbone = {}
-backbone["name"] = "models.backbone_simplevit.MLPMixer"
+backbone["name"] = "models.backbone_mlpmixer.MLPMixer"
 backbone["config"] = {
     "image_size": 32,
     "patch_size": 4,
