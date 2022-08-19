@@ -13,7 +13,7 @@ backbone["config"] = {
     "image_size": 32,
     "patch_size": 4,
     "dim": 512,
-    "depth": 6,
+    "depth": 8,
     "num_classes": 10,
     "token_dim": 256,
     "channel_dim": 2048,
