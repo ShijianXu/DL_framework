@@ -6,6 +6,7 @@
 - [x] Simple CNN
 - [x] Torchvision ResNet
 - [x] SimpleViT
+- [x] MLP-Mixer
 - [ ] ConvMixer
 
 ### Dense Prediction
