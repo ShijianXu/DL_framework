@@ -15,7 +15,7 @@ backbone["config"] = {
     "dim": 512,
     "depth": 6,
     "num_classes": 10,
-    "token_dim": 2048,
+    "token_dim": 256,
     "channel_dim": 256,
     "channels": 3
 }
