@@ -44,9 +44,9 @@ def MLPMixer(*, image_size, channels, patch_size, dim, depth, num_classes, expan
 
 if __name__ == '__main__':
     model = MLPMixer(
-        image_size = 256,
+        image_size = 32,
         channels = 3,
-        patch_size = 16,
+        patch_size = 4,
         dim = 512,
         depth = 1,
         num_classes = 1000

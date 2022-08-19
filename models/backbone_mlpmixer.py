@@ -100,17 +100,19 @@ class MLPMixer(nn.Module):
 
 if __name__ == '__main__':
     model = MLPMixer(
-        image_size=224,
+        image_size=32,
         channels=3,
-        patch_size=16,
+        patch_size=4,
         dim=512,
-        depth=8,
+        depth=1,
         num_classes=1000,
         token_dim=256,
-        channel_dim=2048
+        channel_dim=256
     )
 
     import numpy as np
     parameters = filter(lambda p: p.requires_grad, model.parameters())
     parameters = sum([np.prod(p.size()) for p in parameters]) / 1_000_000
     print('Trainable Parameters: %.3fM' % parameters)
+
+    print(model)
