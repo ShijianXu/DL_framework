@@ -85,6 +85,7 @@ class Trainer(object):
 
     def _on_epoch_end(self, epoch):
         if epoch < self.epochs-1:
+            self.save_checkpoint(epoch)
             valid_loss = self.validate(epoch)
             print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
 
