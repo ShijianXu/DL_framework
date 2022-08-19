@@ -100,16 +100,17 @@ class MLPMixer(nn.Module):
 
 if __name__ == '__main__':
     model = MLPMixer(
-        image_size=32,
+        image_size=224,
         channels=3,
-        patch_size=4,
+        patch_size=16,
         dim=512,
-        depth=6,
-        num_classes=10,
+        depth=8,
+        num_classes=1000,
         token_dim=256,
         channel_dim=2048
     )
 
-    img = torch.randn(1, 3, 32, 32)
-    pred = model(img)
-    print(pred.shape)
+    import numpy as np
+    parameters = filter(lambda p: p.requires_grad, model.parameters())
+    parameters = sum([np.prod(p.size()) for p in parameters]) / 1_000_000
+    print('Trainable Parameters: %.3fM' % parameters)
