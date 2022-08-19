@@ -1,4 +1,4 @@
 python main.py \
     --mode train \
     --config configs/cifar_cls_mlpmixer.py \
-    --log ./logs/cifar_cls_mlpmixer_large_bs
+    --log ./logs/cifar_cls_mlpmixer_1_large_bs

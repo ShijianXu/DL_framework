@@ -9,13 +9,16 @@ import models.model_classifier
 # Model part
 backbone = {}
 backbone["name"] = "models.backbone_mlpmixer2.MLPMixer"
+# backbone["name"] = "models.backbone_mlpmixer.MLPMixer"
 backbone["config"] = {
     "image_size": 32,
     "patch_size": 4,
     "dim": 512,
     "depth": 6,
     "num_classes": 10,
-    "channels": 3
+    "channels": 3,
+    # "token_dim": 256,
+    # "channel_dim": 256
 }
 backend = torch.nn.Identity()
 
@@ -54,18 +57,18 @@ transform_test = transforms.Compose([
 valid_dataset = torchvision.datasets.CIFAR10('data', train=False, download=True, transform=transform_test)
 valid_dataloader = DataLoader(
     valid_dataset, 
-    batch_size=4, 
+    batch_size=128, 
     shuffle=True, 
-    num_workers=2
+    num_workers=8
 )
 print("Construct test dataset with {} samples".format(len(valid_dataset)))
 
 test_dataset = torchvision.datasets.CIFAR10('data', train=False, download=True, transform=transform_test)
 test_dataloader = DataLoader(
     test_dataset, 
-    batch_size=4, 
+    batch_size=128, 
     shuffle=True, 
-    num_workers=2
+    num_workers=8
 )
 test_require_gt = True
 
