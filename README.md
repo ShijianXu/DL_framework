@@ -24,3 +24,4 @@
 - [ ] RandAugment
 - [ ] mixup
 - [ ] linear warmup
+- [ ] save ckpt by metric
