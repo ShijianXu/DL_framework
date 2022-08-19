@@ -13,10 +13,10 @@ backbone["config"] = {
     "image_size": 32,
     "patch_size": 4,
     "dim": 512,
-    "depth": 8,
+    "depth": 6,
     "num_classes": 10,
-    "token_dim": 256,
-    "channel_dim": 2048,
+    "token_dim": 2048,
+    "channel_dim": 256,
     "channels": 3
 }
 backend = torch.nn.Identity()
