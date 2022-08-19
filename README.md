@@ -18,5 +18,8 @@
 - [ ] GAN
 
 
-## TODO
+## Other Components
 - [ ] wandb support
+- [ ] RandAugment
+- [ ] mixup
+- [ ] linear warmup
