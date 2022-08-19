@@ -81,5 +81,4 @@ optimizer = torch.optim.Adam(model.parameters(), learning_rate)
 # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer,
 #                 patience=num_epochs/4, factor=0.5, verbose=True)
 
-scheduler_name = 'CosineAnnealingLR'
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, num_epochs)
