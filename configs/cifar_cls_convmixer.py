@@ -13,7 +13,7 @@ backbone["config"] = {
     "dim": 256,
     "depth": 16,             # ConvMixer-256/8 (hidden dim / depth)
     "kernel_size": 8,
-    "patch_size": 1,        # CIFAR-10 inputs are so small that we initially only used p = 1
+    "patch_size": 2,        # CIFAR-10 inputs are so small that we initially only used p = 1
     "num_classes": 10,
     "channels": 3,
 }
