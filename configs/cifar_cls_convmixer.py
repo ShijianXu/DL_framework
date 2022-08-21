@@ -8,17 +8,14 @@ import models.model_classifier
 
 # Model part
 backbone = {}
-backbone["name"] = "models.backbone_mlpmixer2.MLPMixer"
-# backbone["name"] = "models.backbone_mlpmixer.MLPMixer"
+backbone["name"] = "models.backbone_convmixer.ConvMixer"
 backbone["config"] = {
-    "image_size": 32,
-    "patch_size": 4,
-    "dim": 512,
-    "depth": 6,
+    "dim": 256,
+    "depth": 16,             # ConvMixer-256/8 (hidden dim / depth)
+    "kernel_size": 8,
+    "patch_size": 1,        # CIFAR-10 inputs are so small that we initially only used p = 1
     "num_classes": 10,
     "channels": 3,
-    # "token_dim": 256,
-    # "channel_dim": 256
 }
 backend = torch.nn.Identity()
 
