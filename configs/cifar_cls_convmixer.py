@@ -13,7 +13,7 @@ backbone["config"] = {
     "dim": 256,
     "depth": 16,             # ConvMixer-256/8 (hidden dim / depth)
     "kernel_size": 8,
-    "patch_size": 2,        # CIFAR-10 inputs are so small that we initially only used p = 1
+    "patch_size": 1,        # CIFAR-10 inputs are so small that we initially only used p = 1
     "num_classes": 10,
     "channels": 3,
 }
@@ -39,9 +39,9 @@ transform_train = transforms.Compose([
 train_dataset = torchvision.datasets.CIFAR10('data', train=True, download=True, transform=transform_train)
 train_dataloader = DataLoader(
     train_dataset, 
-    batch_size=16, 
+    batch_size=128, 
     shuffle=True, 
-    num_workers=4
+    num_workers=16
 )
 print("Construct train dataset with {} samples".format(len(train_dataset)))
 
@@ -54,18 +54,18 @@ transform_test = transforms.Compose([
 valid_dataset = torchvision.datasets.CIFAR10('data', train=False, download=True, transform=transform_test)
 valid_dataloader = DataLoader(
     valid_dataset, 
-    batch_size=16, 
+    batch_size=32, 
     shuffle=True, 
-    num_workers=4
+    num_workers=8
 )
 print("Construct test dataset with {} samples".format(len(valid_dataset)))
 
 test_dataset = torchvision.datasets.CIFAR10('data', train=False, download=True, transform=transform_test)
 test_dataloader = DataLoader(
     test_dataset, 
-    batch_size=16, 
+    batch_size=32, 
     shuffle=True, 
-    num_workers=4
+    num_workers=8
 )
 test_require_gt = True
 
