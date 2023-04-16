@@ -9,8 +9,9 @@ from utils import pair
 # def pair(t):
 #     return t if isinstance(t, tuple) else (t, t)
 
+
 class MLP(nn.Module):
-    def __init__(self, dim, hidden_dim, dropout = 0.):
+    def __init__(self, dim, hidden_dim, dropout=0.):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(dim, hidden_dim),
@@ -19,12 +20,13 @@ class MLP(nn.Module):
             nn.Linear(hidden_dim, dim),
             nn.Dropout(dropout)
         )
+
     def forward(self, x):
         return self.net(x)
 
 
 class MixerLayer(nn.Module):
-    def __init__(self, num_patches, dim, token_dim, channel_dim, dropout = 0.):
+    def __init__(self, num_patches, dim, token_dim, channel_dim, dropout=0.):
         super().__init__()
 
         self.token_mix = nn.Sequential(
@@ -47,16 +49,16 @@ class MixerLayer(nn.Module):
 
 class MLPMixer(nn.Module):
     def __init__(self,
-        *, 
-        image_size, 
-        patch_size, 
-        dim, 
-        depth, 
-        num_classes, 
-        token_dim = 256, 
-        channel_dim = 2048,
-        channels = 3,
-        dropout = 0.
+        *,
+        image_size,
+        patch_size,
+        dim,
+        depth,
+        num_classes,
+        token_dim=256,
+        channel_dim=2048,
+        channels=3,
+        dropout=0.
     ):
         super().__init__()
 
