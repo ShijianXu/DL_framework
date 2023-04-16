@@ -22,6 +22,16 @@
 ## Other Components
 - [ ] wandb support
 - [ ] RandAugment
+- [ ] AugMix
 - [ ] mixup
 - [ ] linear warmup
 - [ ] save ckpt by metric
+
+
+## How to run
+To start training, run the following command:
+
+```shell
+./train.sh
+```
+
