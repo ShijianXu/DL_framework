@@ -14,6 +14,14 @@ class CLS_Model(Abstract_Model):
         self.total = 0
         self.correct = 0
 
+    def compute_loss(self, source, output, target, criterion):
+        if isinstance(output, list):
+            loss = criterion(output[0], target)
+        else:
+            loss = criterion(output, target)
+            
+        return {"loss": loss}
+
     def compute_metric(self, source, output, target):
         """Computes the accuracy over the k top predictions for the specified values of k"""
         with torch.no_grad():

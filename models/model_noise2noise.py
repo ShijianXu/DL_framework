@@ -15,6 +15,14 @@ class Noise2Noise(Abstract_Model):
         # for test/val
         self.psnr_m = utils.AverageMeter()
 
+    def compute_loss(self, source, output, target, criterion):
+        if isinstance(output, list):
+            loss = criterion(output[0], target)
+        else:
+            loss = criterion(output, target)
+            
+        return {"loss": loss}
+
     def compute_metric(self, source, output, target):
         """Computes PSNR value"""
 

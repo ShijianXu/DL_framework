@@ -50,13 +50,8 @@ class Abstract_Model(nn.Module):
         print(f"Backend num of params: {self.num_params_backend}")
         return self.num_params_backbone + self.num_params_backend
 
-    def compute_loss(self, source, output, target, criterion):
-        if isinstance(output, list):
-            loss = criterion(output[0], target)
-        else:
-            loss = criterion(output, target)
-            
-        return {"loss": loss}
+    def compute_loss(self, *args, **kwargs):
+        raise NotImplementedError("Abstract method not implemented.")
 
     def compute_metric(self, *args, **kwargs):
         raise NotImplementedError("Abstract method not implemented.")
