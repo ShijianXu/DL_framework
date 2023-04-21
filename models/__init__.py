@@ -16,7 +16,10 @@ class Abstract_Model(nn.Module):
         else:
             self.backbone = backbone
 
-        if not backend_created:
+        # There is always a backbone, but there is no backend for some models
+        if backend is None:
+            self.backend = None
+        elif not backend_created:
             self.backend = Abstract_Model.build_module(backend)
         else:
             self.backend = backend
@@ -36,7 +39,10 @@ class Abstract_Model(nn.Module):
 
     def forward(self, x):
         x = self.backbone(x)
-        out = self.backend(x)
+        if self.backend is not None:
+            out = self.backend(x)
+        else:
+            out = x
         return out
 
     def get_num_params(self):
@@ -52,7 +58,7 @@ class Abstract_Model(nn.Module):
             
         return {"loss": loss}
 
-    def compute_metric(self, source, output, target):
+    def compute_metric(self, *args, **kwargs):
         raise NotImplementedError("Abstract method not implemented.")
 
     def get_metric_value(self):
