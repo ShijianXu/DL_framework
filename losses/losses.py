@@ -28,3 +28,26 @@ def VAE_Loss_fn(recons, input, mu, logvar, kld_weight=1):
         "recons_loss": recons_loss,
         "KL-Divergence": -kld_loss
     }
+
+
+class RealNVPLoss(nn.Module):
+    """
+    NLL Loss function for RealNVP
+    """
+    def __init__(self):
+        super().__init__()
+
+        # Create prior distribution for the final latent space
+        # typically assumed to be a standard normal distribution
+        self.prior = torch.distributions.Normal(loc=0.0, scale=1.0)
+
+    def forward(self, z, log_det):
+        log_z = self.prior.log_prob(z).sum(dim=(1,2,3))
+        log_likelihood = log_z + log_det
+        nll_loss = -torch.mean(log_likelihood)
+        
+        return {
+            "loss": nll_loss,
+            "log_likelihood": log_likelihood,
+            "log_det": log_det
+        }
