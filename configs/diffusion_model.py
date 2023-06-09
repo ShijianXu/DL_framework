@@ -369,6 +369,8 @@ epochs = 100
 print("Start training...")
 for epoch in range(epochs):
     for step, batch in enumerate(dataloader):
+        batch = batch.to(device)
+
         optimizer.zero_grad()
 
         t = torch.randint(0, T, (BATCH_SIZE,), device=device).long()
