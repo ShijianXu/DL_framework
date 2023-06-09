@@ -2,6 +2,27 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
+class Diffusion_Loss(nn.Module):
+    pass
+
+
+def Diffusion_Loss_fn(model, x_0, t, forward_sampling_fn, loss_type="l1"):
+    x_noisy, noise = forward_sampling_fn(x_0, t, device=x_0.device)
+    noise_pred = model(x_noisy, t)
+    
+    if loss_type == 'l1':
+        loss = F.l1_loss(noise, noise_pred)
+    elif loss_type == 'l2':
+        loss = F.mse_loss(noise, noise_pred)
+    elif loss_type == "huber":
+        loss = F.smooth_l1_loss(noise, noise_pred)
+    else:
+        raise NotImplementedError()
+
+    return loss
+
+
 class VAE_Loss(nn.Module):
     def __init__(self):
         super().__init__()
