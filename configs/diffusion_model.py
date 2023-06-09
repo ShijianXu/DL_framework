@@ -127,7 +127,7 @@ class SimpleUnet(nn.Module):
 #=================================================================================================
 # Loss
 def Diffusion_Loss_fn(model, x_0, t, loss_type="l1"):
-    x_noisy, noise = forward_diffusion_sample(x_0, t, device=x_0.device)
+    x_noisy, noise = forward_diffusion_sample(x_0, t, device=device)
     noise_pred = model(x_noisy, t)
     
     if loss_type == 'l1':
@@ -369,8 +369,6 @@ epochs = 100
 print("Start training...")
 for epoch in range(epochs):
     for step, batch in enumerate(dataloader):
-        batch = batch.to(device)
-
         optimizer.zero_grad()
 
         t = torch.randint(0, T, (BATCH_SIZE,), device=device).long()
