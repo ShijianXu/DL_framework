@@ -178,7 +178,7 @@ def get_index_from_list(vals, t, x_shape):
     return out.reshape(batch_size, *((1,) * (len(x_shape)-1))).to(t.device)
 
 
-def forward_diffusion_sample(x_0, t, device="cpu"):
+def forward_diffusion_sample(x_0, t, device):
     """
     Takes an image and a timestep as input and 
     returns the nosiy image for that timestep.
@@ -372,7 +372,7 @@ for epoch in range(epochs):
         optimizer.zero_grad()
 
         t = torch.randint(0, T, (BATCH_SIZE,), device=device).long()
-        loss = Diffusion_Loss_fn(model, batch[0], t, forward_diffusion_sample)
+        loss = Diffusion_Loss_fn(model, batch[0].to(device), t)
         loss.backward()
         optimizer.step()
 
