@@ -250,19 +250,19 @@ dataloader = DataLoader(data, batch_size=BATCH_SIZE, shuffle=True, drop_last=Tru
 
 
 # Simulate forward diffusion
-image = next(iter(dataloader))[0]
-plt.figure(figsize=(15, 6))
-plt.axis('off')
-num_images = 10
-stepsize = int(T / num_images)
+# image = next(iter(dataloader))[0]
+# plt.figure(figsize=(15, 6))
+# plt.axis('off')
+# num_images = 10
+# stepsize = int(T / num_images)
 
-for idx in range(0, T, stepsize):
-    t = torch.Tensor([idx]).type(torch.int64)   # timestep
-    plt.subplot(1, num_images+1, int(idx/stepsize) + 1)
-    img, noise = forward_diffusion_sample(image, t)
-    show_tensor_image(img)
+# for idx in range(0, T, stepsize):
+#     t = torch.Tensor([idx]).type(torch.int64)   # timestep
+#     plt.subplot(1, num_images+1, int(idx/stepsize) + 1)
+#     img, noise = forward_diffusion_sample(image, t)
+#     show_tensor_image(img)
     
-plt.show()
+# plt.show()
 # why the image at idx=0 also has noise?
 
 
