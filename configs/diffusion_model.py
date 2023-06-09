@@ -309,7 +309,7 @@ def sample_plot_image():
     # img start from pure noise
     img = torch.randn((1, 3, img_size, img_size), device=device)
 
-    plt.figure(figsize=(8, 8))
+    figure = plt.figure(figsize=(8, 8))
     plt.axis('off')
     num_images = 10
     stepsize = int(T / num_images)
@@ -323,7 +323,7 @@ def sample_plot_image():
             plt.subplot(1, num_images, int(i/stepsize) + 1)
             show_tensor_image(img.detach().cpu())
 
-    plt.show()
+    return figure
 
 
 @torch.no_grad()
@@ -346,8 +346,10 @@ def log_images(epoch):
         if i % stepsize == 0:
             image_list.append((img + 1.) / 2.)  # convert to [0,1]
 
+    image_tensor = torch.cat(image_list, dim=0)
     # Create a grid of images
-    grid = vutils.make_grid(image_list, nrow=num_images, normalize=True, scale_each=True)
+    print(image_tensor.shape)
+    grid = vutils.make_grid(image_tensor)
 
     # Log the grid to TensorBoard
     writer.add_image(f'Sampled Images at epoch: {epoch}', grid, global_step=epoch)
