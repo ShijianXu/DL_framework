@@ -42,3 +42,13 @@ def posemb_sincos_2d(patches, temperature = 10000, dtype = torch.float32):
     x = x.flatten()[:, None] * omega[None, :] 
     pe = torch.cat((x.sin(), x.cos(), y.sin(), y.cos()), dim = 1)
     return pe.type(dtype)
+
+
+def get_index_from_list(vals, t, x_shape):
+    """
+    Returns a specific index t of a list of values vals
+    while considering the batch dimension of x_shape.
+    """
+    batch_size = t.shape[0]
+    out = vals.gather(-1, t.cpu())
+    return out.reshape(batch_size, *((1,) * (len(x_shape)-1))).to(t.device)

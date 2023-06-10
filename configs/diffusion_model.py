@@ -212,7 +212,7 @@ from torch.utils.data import DataLoader
 import numpy as np
 
 IMG_SIZE = 64
-BATCH_SIZE = 128
+BATCH_SIZE = 256
 
 def load_transformed_dataset():
     data_transform = transforms.Compose([
@@ -348,7 +348,6 @@ def log_images(epoch):
 
     image_tensor = torch.cat(image_list, dim=0)
     # Create a grid of images
-    print(image_tensor.shape)
     grid = vutils.make_grid(image_tensor)
 
     # Log the grid to TensorBoard

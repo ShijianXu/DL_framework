@@ -48,6 +48,8 @@ if __name__ == '__main__':
             optimizer=config.optimizer,
             epochs=config.num_epochs,
             scheduler=config.scheduler,
+            sample_valid=config.sample_valid,
+            sample_valid_freq=config.sample_valid_freq,
             print_freq=args.print_freq,
             log_dir=args.log,
             resume=args.auto_resume,

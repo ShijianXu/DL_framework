@@ -62,13 +62,14 @@ class SimpleUnet(nn.Module):
     """
     A simplified variant of the U-Net architecture.
     """
-    def __init__(self):
+    def __init__(self,
+        image_channels = 3,
+        down_channels = [64, 128, 256, 512, 1024],
+        up_channels = [1024, 512, 256, 128, 64],
+        out_dim = 3,
+        time_emb_dim = 32,
+    ):
         super().__init__()
-        image_channels = 3
-        down_channels = [64, 128, 256, 512, 1024]
-        up_channels = [1024, 512, 256, 128, 64]
-        out_dim = 3
-        time_emb_dim = 32
 
         # Time embedding
         self.time_mlp = nn.Sequential(
