@@ -4,7 +4,23 @@ import torch.nn.functional as F
 
 
 class Diffusion_Loss(nn.Module):
-    pass
+    def __init__(self, loss_type="l1"):
+        super().__init__()
+        self.loss_type = loss_type
+
+    def forward(self, noise, noise_pred):
+        if self.loss_type == 'l1':
+            loss = F.l1_loss(noise, noise_pred)
+        elif self.loss_type == 'l2':
+            loss = F.mse_loss(noise, noise_pred)
+        elif self.loss_type == "huber":
+            loss = F.smooth_l1_loss(noise, noise_pred)
+        else:
+            raise NotImplementedError()
+
+        return {
+            "loss": loss
+        }
 
 
 def Diffusion_Loss_fn(model, x_0, t, forward_sampling_fn, loss_type="l1"):

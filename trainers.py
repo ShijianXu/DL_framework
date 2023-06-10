@@ -4,6 +4,7 @@ from tqdm import tqdm
 import utils
 from torch.utils.tensorboard import SummaryWriter
 from torchvision.utils import save_image
+import torchvision.utils as vutils
 
 class Trainer(object):
     def __init__(self,
@@ -15,6 +16,8 @@ class Trainer(object):
         optimizer,
         epochs,
         scheduler=None,
+        sample_valid=False,
+        sample_valid_freq=5,
         print_freq=400,
         log_dir='./logs',
         resume=True,
@@ -25,6 +28,9 @@ class Trainer(object):
         self.model = model
         self.train_dataloader = train_dataloader
         self.val_dataloader = val_dataloader
+        if self.val_dataloader is None:
+            print("=> No validation dataloader provided. Skip validation at the end of each epoch.")
+        
         self.criterion = criterion
         self.optimizer = optimizer
         self.scheduler = scheduler
@@ -36,6 +42,9 @@ class Trainer(object):
         self.log_dir = log_dir
         self.resume = resume
         self.resume_optimizer = resume_optimizer
+
+        self.sample_valid = sample_valid        # indicate whether to generate images for validation
+        self.sample_valid_freq = sample_valid_freq  # epoch frequency to generate images for validation
 
         # init logger
         if log_tool == 'tensorboard':
@@ -57,8 +66,8 @@ class Trainer(object):
         if self.resume:
             ckpt_path = os.path.join(self.log_dir, 'checkpoints', 'checkpoint_latest.pth')
             if os.path.exists(os.path.join(self.log_dir, 'checkpoints')) and os.path.isfile(ckpt_path):
-                    print("=> Resuming ckpt ...")
-                    self.resume_ckpt(ckpt_path)
+                print("=> Resuming ckpt ...")
+                self.resume_ckpt(ckpt_path)
             else:
                 print("=> No ckpt in log dir.")
         else:
@@ -86,8 +95,14 @@ class Trainer(object):
     def _on_epoch_end(self, epoch):
         if epoch < self.epochs-1:
             self.save_checkpoint(epoch)
-            valid_loss = self.validate(epoch)
-            print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
+            
+            if self.val_dataloader is not None:
+                valid_loss = self.validate(epoch)
+                print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
+
+            if self.sample_valid and epoch % self.sample_valid_freq == 0:
+                image_tensor = self.model.sample_images(epoch, self.config.IMG_SIZE, self.device)
+                self.log_images("Valid/Sample", image_tensor, epoch)
 
             if self.scheduler is not None:
                 if hasattr(self.config, 'scheduler_name') and self.config.scheduler_name == 'ReduceLROnPlateau':
@@ -102,18 +117,21 @@ class Trainer(object):
         self.model.train()
         self.optimizer.zero_grad()
 
-        source, target = batch
-        source = source.to(self.device)
-        target = target.to(self.device)
-        output = self.model(source)
-
         # The returned loss is a dict
-        losses = self.model.compute_loss(source, output, target, self.criterion)     
+        losses = self.model.process_batch(batch, self.criterion, self.device)
 
+        # source, target = batch
+        # source = source.to(self.device)
+        # target = target.to(self.device)
+        # output = self.model(source)
+        # losses = self.model.compute_loss(source, output, target, self.criterion)
+
+        # log loss
         for key, val in losses.items():
             self.log_scalar(f"Train/{key}", val.item(), self.total_steps)
 
-        self.losses_m.update(losses['loss'].item(), source.size(0))
+        # update loss AverageMeter
+        self.losses_m.update(losses['loss'].item(), batch[0].size(0))
         
         losses['loss'].backward()
         self.optimizer.step()
@@ -172,6 +190,13 @@ class Trainer(object):
 
     def log_scalar(self, name, value, step):
         self.writer.add_scalar(name, value, step)
+
+    def log_images(self, name, image_tensor, step):
+        # Create a grid of images
+        grid = vutils.make_grid(image_tensor)
+
+        # Log the grid to TensorBoard
+        self.writer.add_image(f'{name} epoch: {step}', grid, global_step=step)
 
     def resume_ckpt(self, ckpt_path):
         checkpoint = torch.load(ckpt_path, map_location=self.device)

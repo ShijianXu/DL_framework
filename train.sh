@@ -1,4 +1,4 @@
 python main.py \
     --mode train \
-    --config configs/cifar_cls_convmixer.py \
-    --log ./logs/cifar_cls_convmixer
+    --config configs/diffusion_DDPM.py \
+    --log ./logs/diffusion_DDPM

@@ -25,25 +25,29 @@ class Abstract_Model(nn.Module):
             self.backend = backend
 
         self.num_params_backbone = sum(param.numel() for param in self.backbone.parameters())
-        self.num_params_backend = sum(param.numel() for param in self.backend.parameters())
+        self.num_params_backend = sum(param.numel() for param in self.backend.parameters()) \
+            if self.backend is not None else 0
 
     @staticmethod
     def build_module(module_config):
         class_name = module_config["name"].split('.')[-1]
         module_name = module_config["name"][:(len(module_config["name"]))-len(class_name)-1]
-        
+
         class_type = getattr(importlib.import_module(module_name), class_name)
         obj = class_type(**module_config["config"])
 
         return obj
 
-    def forward(self, x):
-        x = self.backbone(x)
-        if self.backend is not None:
-            out = self.backend(x)
-        else:
-            out = x
-        return out
+    def forward(self, *args, **kwargs):
+        raise NotImplementedError("Abstract method not implemented.")
+
+    # def forward(self, x):
+    #     x = self.backbone(x)
+    #     if self.backend is not None:
+    #         out = self.backend(x)
+    #     else:
+    #         out = x
+    #     return out
 
     def get_num_params(self):
         print(f"Backbone num of params: {self.num_params_backbone}")
