@@ -1,3 +1,8 @@
+"""
+Code Reference:
+- https://colab.research.google.com/drive/1sjy9odlSSy0RBVgMTgP7s99NXsqglsUL?usp=sharing
+"""
+
 import torch
 from torch import nn
 import math

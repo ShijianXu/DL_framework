@@ -7,7 +7,7 @@
 - [x] Torchvision ResNet
 - [x] SimpleViT
 - [x] MLP-Mixer
-- [ ] ConvMixer
+- [x] ConvMixer
 
 ### Dense Prediction
 - [x] Noise2Noise (Gaussian noise)
@@ -15,8 +15,10 @@
 
 ### Generative Model
 - [x] Vanilla VAE
-- [ ] DDPM
+- [x] Simplified DDPM (UNet)
+- [ ] More complexed diffusion models
 - [ ] GAN
+- [ ] Normalizing flow
 
 
 ## Other Components
@@ -25,7 +27,7 @@
 - [ ] AugMix
 - [ ] mixup
 - [ ] linear warmup
-- [ ] save ckpt by metric
+- [ ] save ckpt by metric (save the best model)
 
 
 ## How to run

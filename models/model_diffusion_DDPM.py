@@ -1,5 +1,9 @@
+"""
+Code Reference:
+- https://colab.research.google.com/drive/1sjy9odlSSy0RBVgMTgP7s99NXsqglsUL?usp=sharing
+"""
+
 import torch
-import utils
 from utils import *
 from . import Abstract_Model
 
@@ -40,7 +44,7 @@ class DiffusionDDPM(Abstract_Model):
         return loss
 
     def forward(self, x, t):
-        return self.backbone(x, t)
+          return self.backbone(x, t)
 
     def forward_diffusion_sample(self, x_0, t, device):
         """
