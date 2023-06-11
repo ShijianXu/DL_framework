@@ -49,7 +49,7 @@ def load_transformed_dataset():
     return torch.utils.data.ConcatDataset([train, test])
 
 dataset = load_transformed_dataset()
-train_dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
+train_dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, num_workers=4, shuffle=True, drop_last=True)
 print("Concate train and test datasets with total {} samples".format(len(dataset)))
 
 valid_dataloader = None   # No validation dataset, but we need to define it
