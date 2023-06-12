@@ -8,7 +8,7 @@ import models.model_diffusion_DDPM
 
 # Model part
 backbone = {}
-backbone["name"] = "models.backbone_unet_diffusion.SimpleUnet"
+backbone["name"] = "models.backbone_diffusion_unet.SimpleUnet"
 backbone["config"] = {
     "image_channels": 3,
     "down_channels": [64, 128, 256, 512, 1024],

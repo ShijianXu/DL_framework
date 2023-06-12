@@ -47,6 +47,9 @@ class Block(nn.Module):
     
 
 class SinusoidalPositionalEmbedding(nn.Module):
+    """
+    Convert time steps from shape (batch_size, 1) to shape (batch_size, dim)
+    """
     def __init__(self, dim):
         super().__init__()
         self.dim = dim
