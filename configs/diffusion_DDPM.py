@@ -7,15 +7,24 @@ from losses import Diffusion_Loss
 import models.model_diffusion_DDPM
 
 # Model part
+IMG_SIZE = 64
+
 backbone = {}
-backbone["name"] = "models.backbone_diffusion_unet.SimpleUnet"
+# backbone["name"] = "models.backbone_diffusion_unet.SimpleUnet"
+# backbone["config"] = {
+#     "image_channels": 3,
+#     "down_channels": [64, 128, 256, 512, 1024],
+#     "up_channels": [1024, 512, 256, 128, 64],
+#     "out_dim": 3,
+#     "time_emb_dim": 32
+# }
+
+backbone["name"] = "models.backbone_diffusion_convnext.Unet"
 backbone["config"] = {
-    "image_channels": 3,
-    "down_channels": [64, 128, 256, 512, 1024],
-    "up_channels": [1024, 512, 256, 128, 64],
-    "out_dim": 3,
-    "time_emb_dim": 32
+    "dim": IMG_SIZE,
+    "use_convnext": False,
 }
+
 
 backend = None
 
@@ -30,8 +39,7 @@ print(f"Total model parameterrs: {model.get_num_params()}")
 
 
 # Data part
-IMG_SIZE = 64
-BATCH_SIZE = 256
+BATCH_SIZE = 128
 
 def load_transformed_dataset():
     data_transform = transforms.Compose([

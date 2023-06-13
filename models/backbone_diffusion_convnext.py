@@ -95,15 +95,17 @@ class ResnetBlock(nn.Module):
     
 
 class ConvNextBlock(nn.Module):
+    """https://arxiv.org/abs/2201.03545"""
+
     def __init__(self, dim, dim_out, *, time_emb_dim=None, mult=2, norm=True):
         super().__init__()
         self.mlp = (
-            nn.Sequential(nn.GELU(), nn.Linear(time_emb_dim, dim_out))
+            nn.Sequential(nn.GELU(), nn.Linear(time_emb_dim, dim))
             if exists(time_emb_dim)
             else None
         )
 
-        self.ds_conv = nn.Conv2d(dim, dim_out, 7, padding=3, groups=dim)
+        self.ds_conv = nn.Conv2d(dim, dim, 7, padding=3, groups=dim)
 
         self.net = nn.Sequential(
             nn.GroupNorm(1, dim) if norm else nn.Identity(),
@@ -224,6 +226,7 @@ class Unet(nn.Module):
         self.channels = channels
 
         init_dim = default(init_dim, dim // 3 * 2)
+        # init_dim = default(init_dim, dim)
         self.init_conv = nn.Conv2d(channels, init_dim, 7, padding=3)
 
         dims = [init_dim, *map(lambda m: dim * m, dim_mults)]
@@ -322,9 +325,9 @@ class Unet(nn.Module):
         return self.final_conv(x)
     
 if __name__ == "__main__":
-    model = Unet(64, dim_mults=(1, 2, 4, 8), use_convnext=False)
-    print(model)
-    x = torch.randn(1, 3, 256, 256)
+    model = Unet(64, dim_mults=(1, 2, 4, 8), use_convnext=True)
+    # print(model)
+    x = torch.randn(1, 3, 64, 64)
     time = torch.tensor([0.5])
     out = model(x, time)
     print(out.shape)

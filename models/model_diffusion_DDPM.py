@@ -60,7 +60,7 @@ class DiffusionDDPM(Abstract_Model):
         return loss
 
     def forward(self, x, t):
-          return self.backbone(x, t)
+        return self.backbone(x, t)
 
     def forward_diffusion_sample(self, x_0, t, device):
         """
