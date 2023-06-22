@@ -1,5 +1,5 @@
 """
-Code reference: https://colab.research.google.com/github/huggingface/notebooks/blob/main/examples/annotated_diffusion.ipynb
+Code reference: https://huggingface.co/blog/annotated-diffusion
 """
 
 import torch
