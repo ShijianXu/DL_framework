@@ -101,7 +101,7 @@ class Trainer(object):
                 print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
 
             if self.sample_valid and epoch % self.sample_valid_freq == 0:
-                image_tensor = self.model.sample_images(epoch, self.config.IMG_SIZE, self.device)
+                image_tensor = self.model.sample_images(self.config.IMG_SIZE, self.device)
                 self.log_images("Valid/Sample", image_tensor, epoch)
 
             if self.scheduler is not None:
@@ -204,6 +204,10 @@ class Trainer(object):
         self.start_epoch = checkpoint['epoch']
         if self.resume_optimizer:
             self.optimizer.load_state_dict(checkpoint['optimizer'])
+            print("=> Resumed optimizer state from checkpoint '{}'".format(ckpt_path))
+
+        else:
+            print("=> Not resumed optimizer state.")
         print("=> Resumed checkpoint '{}'".format(ckpt_path))
 
     def save_checkpoint(self, epoch, filename='checkpoint_latest.pth'):

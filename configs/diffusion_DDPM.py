@@ -10,20 +10,20 @@ import models.model_diffusion_DDPM
 IMG_SIZE = 64
 
 backbone = {}
-# backbone["name"] = "models.backbone_diffusion_unet.SimpleUnet"
-# backbone["config"] = {
-#     "image_channels": 3,
-#     "down_channels": [64, 128, 256, 512, 1024],
-#     "up_channels": [1024, 512, 256, 128, 64],
-#     "out_dim": 3,
-#     "time_emb_dim": 32
-# }
-
-backbone["name"] = "models.backbone_diffusion_convnext.Unet"
+backbone["name"] = "models.backbone_diffusion_unet.SimpleUnet"
 backbone["config"] = {
-    "dim": IMG_SIZE,
-    "use_convnext": False,
+    "image_channels": 3,
+    "down_channels": [64, 128, 256, 512, 1024],
+    "up_channels": [1024, 512, 256, 128, 64],
+    "out_dim": 3,
+    "time_emb_dim": 32
 }
+
+# backbone["name"] = "models.backbone_diffusion_convnext.Unet"
+# backbone["config"] = {
+#     "dim": IMG_SIZE,
+#     "use_convnext": False,
+# }
 
 
 backend = None
@@ -33,6 +33,7 @@ model_config = {
     "backend": backend,
     "backbone_created": False,
     "T": 200,
+    "beta_schedule": "linear",  # 'linear', 'cosine', 'quadratic', 'sigmoid'
 }
 model = models.model_diffusion_DDPM.DiffusionDDPM(**model_config)
 print(f"Total model parameterrs: {model.get_num_params()}")
@@ -64,8 +65,8 @@ valid_dataloader = None   # No validation dataset, but we need to define it
 
 
 # Loss abd training part
-num_epochs = 100
-learning_rate = 1e-3
+num_epochs = 300
+learning_rate = 1e-4
 loss = Diffusion_Loss(loss_type="l1")
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = None
