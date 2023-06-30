@@ -58,6 +58,7 @@ class Trainer(object):
 
         # to device
         self.model.to(self.device)
+        self.model.everything_to(self.device)
         self.criterion.to(self.device)
 
     def train(self):
@@ -135,6 +136,11 @@ class Trainer(object):
         
         losses['loss'].backward()
         self.optimizer.step()
+
+        # EMA update for NCSNv2
+        if hasattr(self.model, 'ema_helper'):
+            self.model.post_update()
+
         self.total_steps += 1
 
     def validate(self, epoch):

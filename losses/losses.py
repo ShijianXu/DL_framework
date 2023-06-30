@@ -3,6 +3,39 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+def anneal_dsm_score_estimation(model, samples, sigmas, labels=None, anneal_power=2.):
+    if labels is None:
+        # randomly sample noise levels (n_batch, )
+        labels = torch.randint(0, len(sigmas), (samples.shape[0],), device=samples.device)
+
+        # select corresponding sigmas for noise
+        used_sigmas = sigmas[labels].view(samples.shape[0], *([1]*len(samples.shape[1:])))
+        noise = torch.randn_like(samples) * used_sigmas
+        perturbed_samples = samples + noise
+
+        target = - 1 / (used_sigmas ** 2) * noise
+
+        scores = model(perturbed_samples, labels)
+        target = target.view(target.shape[0], -1)
+        scores = scores.view(scores.shape[0], -1)
+        loss = 1/2. * ((scores - target) ** 2).sum(dim=-1) * used_sigmas.squeeze() ** anneal_power
+
+        return loss.mean(dim=0)
+
+
+class Anneal_DSM_Loss(nn.Module):
+    def __init__(self, anneal_power=2.):
+        super().__init__()
+        self.anneal_power = anneal_power
+
+    def forward(self, scores, target, sigma):
+        loss = 1/2. * ((scores - target) ** 2).sum(dim=-1) * sigma.squeeze() ** self.anneal_power
+
+        return {
+            "loss": loss.mean(dim=0)
+        }
+
+
 class Diffusion_Loss(nn.Module):
     def __init__(self, loss_type="l1"):
         super().__init__()

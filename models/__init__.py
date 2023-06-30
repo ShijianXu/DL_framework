@@ -41,6 +41,13 @@ class Abstract_Model(nn.Module):
     def forward(self, *args, **kwargs):
         raise NotImplementedError("Abstract method not implemented.")
 
+    def everything_to(self, device):
+        """
+        For internal tensors defined in the model,
+        manually move them to the device.
+        """
+        return
+
     # def forward(self, x):
     #     x = self.backbone(x)
     #     if self.backend is not None:
