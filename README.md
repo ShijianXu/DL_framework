@@ -16,6 +16,7 @@
 ### Generative Model
 - [x] Vanilla VAE
 - [x] Simplified DDPM (UNet)
+- [x] NCSN v2 (The EMA resume may not correctly handled)
 - [ ] More complexed diffusion models
 - [ ] GAN
 - [ ] Normalizing flow
