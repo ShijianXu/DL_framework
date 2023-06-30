@@ -37,6 +37,9 @@ class NCSNv2(Abstract_Model):
 
     def everything_to(self, device):
         self.sigmas = self.sigmas.to(device)
+
+        # this is a compromise, the ema_helper need to register the backbone to the device
+        # if register the backbone at init, it was still on cpu
         if self.ema:
             self.ema_helper.register(self.backbone)
 
