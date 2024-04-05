@@ -172,6 +172,7 @@ class EMAHelper(object):
                 param.data.copy_(self.shadow[name].data)
 
     def ema_copy(self, module):
+        ## BUG TODO: No config
         if isinstance(module, nn.DataParallel):
             inner_module = module.module
             module_copy = type(inner_module)(inner_module.config).to(inner_module.config.device)
