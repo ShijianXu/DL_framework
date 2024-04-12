@@ -121,3 +121,30 @@ class RealNVPLoss(nn.Module):
             "log_likelihood": log_likelihood,
             "log_det": log_det
         }
+    
+
+# TODO: Check correctness of the loss function
+class ContrastiveLoss(nn.Module):
+    def __init__(self, tau=0.07):
+        super().__init__()
+        self.tau = tau
+
+    def forward(self, z_i, z_j):
+        pos_sim = F.cosine_similarity(z_i, z_j, dim=-1) / self.tau
+        neg_sim = F.cosine_similarity(
+            z_i.unsqueeze(1).repeat(1, z_i.shape[0], 1),
+            z_j.unsqueeze(0).repeat(z_i.shape[0], 1, 1),
+            dim=-1
+        ) / self.tau
+
+        neg_sim.fill_diagonal_(float('-inf'))
+
+        loss_e2t = -torch.log(torch.exp(pos_sim) / torch.sum(torch.exp(neg_sim), dim=-1)).mean()
+        loss_t2e = -torch.log(torch.exp(pos_sim) / torch.sum(torch.exp(neg_sim), dim=0)).mean()
+        loss = (loss_e2t + loss_t2e) / 2
+
+        return {
+            "loss": loss,
+            "loss_e2t": loss_e2t,
+            "loss_t2e": loss_t2e
+        }

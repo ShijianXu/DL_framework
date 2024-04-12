@@ -1,6 +1,5 @@
 python main.py \
     --mode train \
-    --config configs/score_NCSNv2.py \
-    --log ./logs/score_NCSNv2 \
-    --print_freq 50 \
-    --resume_optimizer False
+    --config configs/ECG_Text_SSL.py \
+    --log ./logs/ECG_Text_SSL \
+    --print_freq 50
