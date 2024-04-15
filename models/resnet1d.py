@@ -66,7 +66,8 @@ class ResNet1D(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        # x = x.transpose(1, 2)  # 转换维度
+        x = x.transpose(1, 2)  # (batch_size, seq_len, in_channels) -> (batch_size, in_channels, seq_len)
+        
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
@@ -89,3 +90,10 @@ def resnet18_1d(in_channels, block=BasicBlock1D, layers=[2, 2, 2, 2], projection
     # model = ResNet1D(BasicBlock1D, [2, 2, 2, 2], num_features, projection_size)
     model = ResNet1D(in_channels, block=block, layers=layers, projection_size=projection_size)
     return model
+
+
+if __name__ == "__main__":
+    
+    model = resnet18_1d(12)
+    x = torch.randn(32, 1000, 12)
+    print(model(x).shape)           # torch.Size([32, 768])

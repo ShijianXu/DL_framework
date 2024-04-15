@@ -148,3 +148,61 @@ class ContrastiveLoss(nn.Module):
             "loss_e2t": loss_e2t,
             "loss_t2e": loss_t2e
         }
+    
+
+class ContrastiveLoss2(nn.Module):
+    def __init__(self, tau=0.07, use_softplus=True):
+        super().__init__()
+        self.tau = tau
+        self.use_softplus = use_softplus
+        if self.use_softplus:
+            self.softplus = nn.Softplus()
+
+    def forward(self, z_i, z_j):
+        # compute positive pair similarity
+        pos_sim = F.cosine_similarity(z_i, z_j, dim=-1) / self.tau
+
+        # compute negative pair similarity
+        neg_sim_i = F.cosine_similarity(z_i.unsqueeze(1), z_j.unsqueeze(0), dim=-1) / self.tau
+        neg_sim_j = F.cosine_similarity(z_j.unsqueeze(0), z_i.unsqueeze(1), dim=-1) / self.tau
+
+        # exclude the diagonal (postive pairs) from the negative pair similarity
+        neg_sim_i = torch.tril(neg_sim_i, diagonal=-1)  # get lower triangular part from the line below the main diagonal
+        neg_sim_j = torch.tril(neg_sim_j, diagonal=-1)
+
+        # 计算损失
+        exp_pos_sim = torch.exp(pos_sim)
+        exp_neg_sim_i = torch.exp(neg_sim_i)
+        exp_neg_sim_j = torch.exp(neg_sim_j)
+
+        # 使用softmax或softplus来计算归一化的负样本对概率
+        if self.use_softplus:
+            neg_prob_i = self.softplus(neg_sim_i).mean(dim=1)
+            neg_prob_j = self.softplus(neg_sim_j).mean(dim=1)
+        else:
+            neg_prob_i = F.softmax(neg_sim_i, dim=1)
+            neg_prob_j = F.softmax(neg_sim_j, dim=1)
+
+        loss_e2t = -torch.log(exp_pos_sim / (exp_pos_sim + neg_prob_i.sum(dim=-1))).mean()
+        loss_t2e = -torch.log(exp_pos_sim / (exp_pos_sim + neg_prob_j.sum(dim=-1))).mean()
+        loss = (loss_e2t + loss_t2e) / 2
+
+        return {
+            "loss": loss,
+            "loss_e2t": loss_e2t,
+            "loss_t2e": loss_t2e
+        }
+    
+
+if __name__ == "__main__":
+    import time
+    start_time = time.time()
+    
+    loss = ContrastiveLoss2()
+    z_i = torch.randn(32, 768)
+    z_j = torch.randn(32, 768)
+
+    print(loss(z_i, z_j))
+    
+    end_time = time.time()
+    print(f"Time taken: {end_time - start_time}")

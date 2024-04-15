@@ -11,12 +11,12 @@ from losses import ContrastiveLoss
 pretrained_model_name = 'emilyalsentzer/Bio_ClinicalBERT'
 tokenizer = BertTokenizer.from_pretrained(pretrained_model_name)
 text_encoder = models.frozenLM.FrozenLM(pretrained_model_name)
-embedding_dim = text_encoder.language_model.config.hidden_size
+embedding_dim = text_encoder.language_model.config.hidden_size      # 768 for Bio_ClinicalBERT
 
 
 # TODO: how to get the in_channels for the ecg_encoder?
 ecg_encoder = ResNet1D(
-    in_channels=1000, 
+    in_channels=12, 
     block=BasicBlock1D,
     layers=[2, 2, 2, 2],
     projection_size=embedding_dim
