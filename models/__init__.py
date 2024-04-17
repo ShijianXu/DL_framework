@@ -40,6 +40,9 @@ class Abstract_Model(nn.Module):
 
     def forward(self, *args, **kwargs):
         raise NotImplementedError("Abstract method not implemented.")
+    
+    def process_batch(self, *args, **kwargs):
+        raise NotImplementedError("Abstract method not implemented.")
 
     def everything_to(self, device):
         """

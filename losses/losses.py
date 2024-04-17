@@ -99,6 +99,7 @@ def VAE_Loss_fn(recons, input, mu, logvar, kld_weight=1):
         "KL-Divergence": -kld_loss
     }
 
+#===================================================================
 
 class RealNVPLoss(nn.Module):
     """
@@ -107,21 +108,39 @@ class RealNVPLoss(nn.Module):
     def __init__(self):
         super().__init__()
 
-        # Create prior distribution for the final latent space
-        # typically assumed to be a standard normal distribution
-        self.prior = torch.distributions.Normal(loc=0.0, scale=1.0)
+    def forward(self, prior, z, log_det_J):
+        log_p_z = prior.log_prob(z).sum(dim=(1,2,3))
+        log_p_x = log_p_z + log_det_J
+        nll_loss = -log_p_x
+        
+        # Calculating bits per dimension
+        bpd = nll_loss * torch.log2(torch.exp(torch.tensor(1.0))) / torch.prod(torch.tensor(z.shape[1:]))
 
-    def forward(self, z, log_det):
-        log_z = self.prior.log_prob(z).sum(dim=(1,2,3))
-        log_likelihood = log_z + log_det
-        nll_loss = -torch.mean(log_likelihood)
+        return {
+            "nll": nll_loss.mean(),
+            "log_likelihood": log_p_x.mean(),
+            "log_det": log_det_J.mean(),
+            "loss": bpd.mean()
+        }
+
+
+class IrisLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, prior, z, log_det_J):
+        log_p_z = prior.log_prob(z)
+        log_p_x = log_p_z + log_det_J
+        nll_loss = -log_p_x
         
         return {
-            "loss": nll_loss,
-            "log_likelihood": log_likelihood,
-            "log_det": log_det
+            "loss": nll_loss.mean(),
+            "log_likelihood": log_p_x.mean(),
+            "log_det": log_det_J.mean()
         }
-    
+
+
+#===================================================================
 
 # TODO: Check correctness of the loss function
 class ContrastiveLoss(nn.Module):

@@ -1,5 +1,5 @@
 python main.py \
     --mode train \
-    --config configs/ECG_Text_SSL.py \
-    --log ./logs/ECG_Text_SSL \
-    --print_freq 50
+    --config configs/normalizing_flow_iris.py \
+    --log ./logs/NF_iris \
+    --print_freq 10

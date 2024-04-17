@@ -43,7 +43,7 @@ class Trainer(object):
         self.resume = resume
         self.resume_optimizer = resume_optimizer
 
-        self.sample_valid = sample_valid        # indicate whether to generate images for validation
+        self.sample_valid = sample_valid            # indicate whether to generate images for validation
         self.sample_valid_freq = sample_valid_freq  # epoch frequency to generate images for validation
 
         # init logger
@@ -58,7 +58,7 @@ class Trainer(object):
 
         # to device
         self.model.to(self.device)
-        self.model.everything_to(self.device)
+        self.model.everything_to(self.device)       # move some internal variables to device
         self.criterion.to(self.device)
 
     def train(self):
@@ -102,8 +102,8 @@ class Trainer(object):
                 print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
 
             if self.sample_valid and epoch % self.sample_valid_freq == 0:
-                image_tensor = self.model.sample_images(self.config.IMG_SIZE, self.device)
-                self.log_images("Valid/Sample", image_tensor, epoch)
+                sample_tensor = self.model.sample(self.config.IMG_SIZE, self.device)
+                self.log_images("Valid/Sample", sample_tensor, epoch)
 
             if self.scheduler is not None:
                 if hasattr(self.config, 'scheduler_name') and self.config.scheduler_name == 'ReduceLROnPlateau':
@@ -120,12 +120,6 @@ class Trainer(object):
 
         # The returned loss is a dict
         losses = self.model.process_batch(batch, self.criterion, self.device)
-
-        # source, target = batch
-        # source = source.to(self.device)
-        # target = target.to(self.device)
-        # output = self.model(source)
-        # losses = self.model.compute_loss(source, output, target, self.criterion)
 
         # log loss
         for key, val in losses.items():

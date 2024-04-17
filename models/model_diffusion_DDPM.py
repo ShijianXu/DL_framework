@@ -98,7 +98,7 @@ class DiffusionDDPM(Abstract_Model):
         return torch.clip(betas, 0.0001, 0.9999)
 
     @torch.no_grad()
-    def sample_images(self, img_size, device):
+    def sample(self, img_size, device):
         # an img starts from pure noise
         img = torch.randn(1, 3, img_size, img_size).to(device)
 
