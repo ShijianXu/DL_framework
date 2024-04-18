@@ -79,7 +79,9 @@ class Iris_NormalizingFlow(nn.Module):
         z = self.prior.sample((num_samples,)).to(device)
         log_det_J = torch.zeros(num_samples, device=device)
         x, log_det_J = self.decode(z, log_det_J)
-        img = x.view(num_samples, 1, 14, 14) if self.is_image else x    # reshape the image
+
+        # TODO: it needs to be more general
+        img = x.view(num_samples, 1, 28, 28) if self.is_image else x    # reshape the image
         return img
 
     def get_num_params(self):

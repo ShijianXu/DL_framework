@@ -57,7 +57,7 @@ class Conditioner2(nn.Module):
         out = out.chunk(2, dim=-1)
         return out
 
-data_dim = 14*14        # 4 features in the iris dataset
+data_dim = 28*28        # 4 features in the iris dataset
 num_flows = 5
 prior = torch.distributions.multivariate_normal.MultivariateNormal(
     loc=torch.zeros(data_dim).to(device='cuda'),
@@ -65,11 +65,22 @@ prior = torch.distributions.multivariate_normal.MultivariateNormal(
 )
 
 flow_layers = []
+# for i in range(num_flows):
+#     flow_layers += [IrisCouplingLayer(
+#                         net=Conditioner2(input_size=data_dim//2,
+#                                         output_size=data_dim,
+#                                         hidden_size=250),
+#                         split=lambda x: x.chunk(2, dim=-1)
+#                     )]
+
 for i in range(num_flows):
     flow_layers += [IrisCouplingLayer(
-                        net=Conditioner2(input_size=data_dim//2,
-                                        output_size=data_dim,
-                                        hidden_size=250),
+                        net=Conditioner(
+                            in_dim=data_dim//2,
+                            out_dim=data_dim//2,
+                            hidden_dim=500,
+                            num_layers=5
+                        ),
                         split=lambda x: x.chunk(2, dim=-1)
                     )]
 
@@ -84,7 +95,7 @@ print(f"Total model parameters: {model.get_num_params()}")
 
 # Data part
 transform = transforms.Compose([
-    transforms.Resize((14, 14)),
+    # transforms.Resize((14, 14)),
     transforms.ToTensor()
 ])
 
@@ -123,12 +134,12 @@ print("Construct test dataset with {} samples".format(len(test_dataset)))
 
 
 # Loss and training part
-num_epochs = 200
+num_epochs = 400
 learning_rate = 1e-5
 
 loss = IrisLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.5)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.5)
 
 
 # Sample part, visualize the training process

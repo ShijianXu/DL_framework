@@ -102,7 +102,9 @@ class Trainer(object):
                 print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
 
             if self.sample_valid and epoch % self.sample_valid_freq == 0:
-                sample_tensor = self.model.sample(self.config.IMG_SIZE, self.device)
+                # TODO: fix this compatibility issue
+                # sample_tensor = self.model.sample(self.config.IMG_SIZE, self.device)
+                sample_tensor = self.model.sample(64, self.device)
                 self.log_images("Valid/Sample", sample_tensor, epoch)
 
             if self.scheduler is not None:
