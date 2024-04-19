@@ -50,8 +50,15 @@ class Trainer(object):
         self.callbacks = callbacks
 
         # init logger
-        if log_tool == 'tensorboard':
+        self.log_tool = log_tool
+        if self.log_tool == 'tensorboard':
             self.writer = SummaryWriter(log_dir=os.path.join(self.log_dir, "log"))
+        elif self.log_tool == 'wandb':
+            import wandb
+            wandb.init(project='normalizing-flows-NICE-MNIST')
+            self.writer = wandb
+        else:
+            raise ValueError("Log tool not supported.")
 
         # check device
         if torch.cuda.is_available():
@@ -183,14 +190,20 @@ class Trainer(object):
             normalize=True, nrow=12)
 
     def log_scalar(self, name, value, step):
-        self.writer.add_scalar(name, value, step)
+        if self.log_tool == 'tensorboard':
+            self.writer.add_scalar(name, value, step)
+        elif self.log_tool == 'wandb':
+            self.writer.log({name: value, 'step': step})
 
     def log_images(self, name, image_tensor, step):
-        # Create a grid of images
-        grid = vutils.make_grid(image_tensor)
+        if self.log_tool == 'tensorboard':
+            # Create a grid of images
+            grid = vutils.make_grid(image_tensor)
 
-        # Log the grid to TensorBoard
-        self.writer.add_image(f'{name} epoch: {step}', grid, global_step=step)
+            # Log the grid to TensorBoard
+            self.writer.add_image(f'{name} epoch: {step}', grid, global_step=step)
+        elif self.log_tool == 'wandb':
+            self.writer.log({name: [self.writer.Image(img) for img in image_tensor], 'step': step})
 
     def resume_ckpt(self, ckpt_path):
         checkpoint = torch.load(ckpt_path, map_location=self.device)

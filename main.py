@@ -55,7 +55,8 @@ if __name__ == '__main__':
             print_freq=args.print_freq,
             log_dir=args.log,
             resume=args.auto_resume,
-            resume_optimizer=args.resume_optimizer
+            resume_optimizer=args.resume_optimizer,
+            log_tool='tensorboard', # options: tensorboard, wandb
         )
         trainer.train()
 
