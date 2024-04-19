@@ -19,8 +19,9 @@
 - [x] NCSN v2 (The EMA resume may not correctly handled)
 - [ ] More complexed diffusion models
 - [ ] GAN
-- [x] NICE
-- [ ] Normalizing flow
+- Normalizing flow
+    - [x] NICE
+    - [ ] MADE
 
 ### TO Check
 - [ ] contrastive loss
