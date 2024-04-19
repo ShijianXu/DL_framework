@@ -61,11 +61,11 @@ class StandardLogistic(torch.distributions.Distribution):
     def log_prob(self, x):
         return -(F.softplus(x) + F.softplus(-x))
 
-    def sample(self, num_samples):
-        return torch.distributions.Uniform(0, 1).sample(num_samples).logit().cuda()
+    def sample(self, smaple_shapes):
+        return torch.distributions.Uniform(0, 1).sample(smaple_shapes).logit().cuda()
     
-    def sample2(self, num_samples):
-        z = torch.distributions.Uniform(0, 1).sample(num_samples).cuda()
+    def sample2(self, smaple_shapes):
+        z = torch.distributions.Uniform(0, 1).sample(smaple_shapes).cuda()
         return torch.log(z) - torch.log(1 - z)
     
 

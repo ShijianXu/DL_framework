@@ -109,7 +109,14 @@ class NICELoss(nn.Module):
         super().__init__()
 
     def forward(self, prior, z, log_det_J):
-        log_p_z = prior.log_prob(z)
+        """
+        determinant is aone real number, it should be of shape (batch_size, )
+        For NICE, all batch elements share one scaling layer, so the determinant
+        is just one value. But normally it should be of shape (batch_size, ).
+        hence log_p_z should be summed over all dimensions except the batch dimension
+        """
+        log_p_z = prior.log_prob(z).sum(dim=1)
+
         log_p_x = log_p_z + log_det_J
         nll_loss = -log_p_x
         

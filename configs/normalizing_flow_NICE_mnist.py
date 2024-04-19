@@ -89,7 +89,8 @@ learning_rate = 1e-3
 
 loss = NICELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.999), eps=1e-4)
-scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.5)
+# scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.5)
+scheduler = None
 
 # Sample part, for compatibility with the Trainer
 sample_valid = True

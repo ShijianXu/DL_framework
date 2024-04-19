@@ -192,7 +192,7 @@ class ScalingLayer(nn.Module):
     def forward(self, x):
         # because the other Jacobian is 0, 
         # the log determinant of the Jacobian is just the last scale
-        log_det_J = self.scale
+        log_det_J = torch.sum(self.scale)
         x = x * torch.exp(self.scale)
         return x, log_det_J
 
