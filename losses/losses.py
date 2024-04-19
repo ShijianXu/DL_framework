@@ -110,9 +110,6 @@ class NICELoss(nn.Module):
 
     def forward(self, prior, z, log_det_J):
         log_p_z = prior.log_prob(z)
-
-        print(log_p_z.shape, log_det_J.shape)
-        exit(0)
         log_p_x = log_p_z + log_det_J
         nll_loss = -log_p_x
         

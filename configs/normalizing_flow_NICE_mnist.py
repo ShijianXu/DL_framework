@@ -68,7 +68,6 @@ print("Construct train dataset with {} samples".format(len(train_dataset)))
 
 valid_dataloader = None
 
-
 test_dataset = datasets.MNIST(
     'data',
     train=False,
