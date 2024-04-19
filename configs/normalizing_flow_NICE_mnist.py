@@ -60,7 +60,7 @@ train_dataset = datasets.MNIST(
 # train_dataset, val_dataset = torch.utils.data.random_split(train_set, [50000, 10000])
 train_dataloader = DataLoader(
     train_dataset,
-    batch_size=128,
+    batch_size=256,
     shuffle=True,
     num_workers=2
 )
@@ -88,7 +88,7 @@ num_epochs = 500
 learning_rate = 1e-3
 
 loss = NICELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.01), eps=1e-4)
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.999), eps=1e-4)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.5)
 
 # Sample part, for compatibility with the Trainer

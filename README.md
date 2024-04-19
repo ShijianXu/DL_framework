@@ -19,7 +19,7 @@
 - [x] NCSN v2 (The EMA resume may not correctly handled)
 - [ ] More complexed diffusion models
 - [ ] GAN
-- [ ] NICE
+- [x] NICE
 - [ ] Normalizing flow
 
 ### TO Check
