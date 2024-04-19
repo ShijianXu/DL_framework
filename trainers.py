@@ -55,7 +55,7 @@ class Trainer(object):
             self.writer = SummaryWriter(log_dir=os.path.join(self.log_dir, "log"))
         elif self.log_tool == 'wandb':
             import wandb
-            wandb.init(project='normalizing-flows-NICE-MNIST')
+            wandb.init(project='random_project')
             self.writer = wandb
         else:
             raise ValueError("Log tool not supported.")
@@ -109,8 +109,9 @@ class Trainer(object):
                 self.losses_m.reset()
 
             print("=> Traing finished.")
-            self.writer.close()
-
+            if self.log_tool == 'tensorboard':
+                self.writer.close()
+            
         except KeyboardInterrupt:
             self.save_checkpoint(epoch)
             print("=> Traing interrupted. Checkpoint saved.")

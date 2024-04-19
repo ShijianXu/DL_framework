@@ -28,7 +28,7 @@
 
 
 ## Other Components
-- [ ] wandb support
+- [x] wandb support
 - [ ] RandAugment
 - [ ] AugMix
 - [ ] mixup
