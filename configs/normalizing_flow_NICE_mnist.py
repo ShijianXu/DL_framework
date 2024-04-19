@@ -84,13 +84,21 @@ print("Construct test dataset with {} samples".format(len(test_dataset)))
 
 
 # Loss and training part
-num_epochs = 300
+num_epochs = 500
 learning_rate = 1e-3
 
 loss = NICELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, betas=(0.9, 0.01), eps=1e-4)
-scheduler = None
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=100, gamma=0.5)
 
 # Sample part, for compatibility with the Trainer
 sample_valid = True
 sample_valid_freq = 5   # sample images every 5 epochs
+
+
+# Callbacks part
+from callbacks import CheckpointResumeCallback
+
+callbacks = [
+    CheckpointResumeCallback(resume=True)
+]

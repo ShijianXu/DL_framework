@@ -22,7 +22,8 @@ class Trainer(object):
         log_dir='./logs',
         resume=True,
         resume_optimizer=True,
-        log_tool='tensorboard'
+        log_tool='tensorboard',
+        callbacks=None
     ):
         self.config = config
         self.model = model
@@ -46,6 +47,8 @@ class Trainer(object):
         self.sample_valid = sample_valid            # indicate whether to generate images for validation
         self.sample_valid_freq = sample_valid_freq  # epoch frequency to generate images for validation
 
+        self.callbacks = callbacks
+
         # init logger
         if log_tool == 'tensorboard':
             self.writer = SummaryWriter(log_dir=os.path.join(self.log_dir, "log"))
@@ -64,15 +67,8 @@ class Trainer(object):
     def train(self):
         # from pudb import set_trace; set_trace()
 
-        if self.resume:
-            ckpt_path = os.path.join(self.log_dir, 'checkpoints', 'checkpoint_latest.pth')
-            if os.path.exists(os.path.join(self.log_dir, 'checkpoints')) and os.path.isfile(ckpt_path):
-                print("=> Resuming ckpt ...")
-                self.resume_ckpt(ckpt_path)
-            else:
-                print("=> No ckpt in log dir.")
-        else:
-            print("=> Start training ...")
+        for callback in self.callbacks:
+            callback.on_train_begin(self)
 
         try:
             self.losses_m = utils.AverageMeter()

@@ -50,6 +50,8 @@ if __name__ == '__main__':
             scheduler=config.scheduler,
             sample_valid=config.sample_valid,
             sample_valid_freq=config.sample_valid_freq,
+            callbacks=config.callbacks,
+
             print_freq=args.print_freq,
             log_dir=args.log,
             resume=args.auto_resume,
