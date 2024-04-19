@@ -33,12 +33,12 @@ class Sampler(object):
         self.model.load_state_dict(checkpoint['state_dict'])
         print("=> loaded checkpoint '{}'".format(self.ckpt_path))
 
-    def sample(self, sample_num=144):
+    def generate(self, sample_num=144):
         print("Sampling ...")
         self.model.eval()
         self.model.reset_metric()
 
-        samples = self.model.sample(sample_num, self.device)
+        samples = self.model.generate(sample_num, self.device)
         output_dir = './output'
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)

@@ -25,7 +25,7 @@ class BasicBlock1D(nn.Module):
         out = self.bn2(out)
 
         if self.downsample is not None:
-            residual = self.downsample(x)
+            residual = self.Downsample(x)
 
         out += residual
         out = self.relu(out)

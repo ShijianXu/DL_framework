@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 from datasets.ptbxl_dataset import PTBXL
 from transformers import BertTokenizer
+from torchvision import transforms
 import models.frozenLM
 import models.model_ecg_text
 from models.resnet1d import BasicBlock1D, ResNet1D
@@ -31,7 +32,11 @@ model_config = {
 model = models.model_ecg_text.ECG_Text_CLIP(**model_config)
 print(f"Total model parameters: {model.get_num_params()}")
 
-# Dataset Part
+# # Dataset Part
+# train_transforms = transforms.Compose([
+#     transforms.ToTensor(),
+# ])
+
 train_dataset = PTBXL(
     path='/home/xu0005/Desktop/ECG_data/ptb-xl/1.0.3/', 
     sampling_rate=100, 

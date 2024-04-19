@@ -132,7 +132,7 @@ class SimpleUnet(nn.Module):
 #=================================================================================================
 # Loss
 def Diffusion_Loss_fn(model, x_0, t, loss_type="l1"):
-    x_noisy, noise = forward_diffusion_sample(x_0, t, device=device)
+    x_noisy, noise = forward_diffusion_generate(x_0, t, device=device)
     noise_pred = model(x_noisy, t)
     
     if loss_type == 'l1':
@@ -183,7 +183,7 @@ def get_index_from_list(vals, t, x_shape):
     return out.reshape(batch_size, *((1,) * (len(x_shape)-1))).to(t.device)
 
 
-def forward_diffusion_sample(x_0, t, device):
+def forward_diffusion_generate(x_0, t, device):
     """
     Takes an image and a timestep as input and 
     returns the nosiy image for that timestep.
@@ -264,7 +264,7 @@ dataloader = DataLoader(data, batch_size=BATCH_SIZE, shuffle=True, drop_last=Tru
 # for idx in range(0, T, stepsize):
 #     t = torch.Tensor([idx]).type(torch.int64)   # timestep
 #     plt.subplot(1, num_images+1, int(idx/stepsize) + 1)
-#     img, noise = forward_diffusion_sample(image, t)
+#     img, noise = forward_diffusion_generate(image, t)
 #     show_tensor_image(img)
     
 # plt.show()

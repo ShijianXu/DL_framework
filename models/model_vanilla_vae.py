@@ -20,7 +20,7 @@ class VanillaVAE(Abstract_Model):
         recons, mu, logvar = output[0], output[1], output[2]
         return criterion(recons, source, mu, logvar, kld_weight=0.00025)
 
-    def sample(self, num_samples, device):
+    def generate(self, num_samples, device):
         """
         Samples from the latent space and return the corresponding image space map.
         :param num_samples: (Int) Number of samples
@@ -29,7 +29,7 @@ class VanillaVAE(Abstract_Model):
         """
         z = torch.randn(num_samples, self.backend.latent_dim)
         z = z.to(device)
-        samples = self.backend.sample(z)
+        samples = self.backend.generate(z)
         return samples
 
     def generate(self, x):

@@ -103,8 +103,8 @@ class Trainer(object):
 
             if self.sample_valid and epoch % self.sample_valid_freq == 0:
                 # TODO: fix this compatibility issue
-                # sample_tensor = self.model.sample(self.config.IMG_SIZE, self.device)
-                sample_tensor = self.model.sample(64, self.device)
+                # sample_tensor = self.model.generate(self.config.IMG_SIZE, self.device)
+                sample_tensor = self.model.generate(64, self.device)
                 self.log_images("Valid/Sample", sample_tensor, epoch)
 
             if self.scheduler is not None:
@@ -182,7 +182,7 @@ class Trainer(object):
         save_image(recons.data, os.path.join(recons_dir, f"Epoch_{epoch}.png"),
             normalize=True, nrow=12)
 
-        samples = self.model.sample(144, self.device)
+        samples = self.model.generate(144, self.device)
         samples_dir = os.path.join(self.log_dir, "Samples")
         if not os.path.exists(samples_dir):
             os.makedirs(samples_dir)

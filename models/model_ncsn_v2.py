@@ -89,7 +89,7 @@ class NCSNv2(Abstract_Model):
         self.ema_helper.update(self.backbone)
 
     @torch.no_grad()
-    def sample(self, img_size, device):
+    def generate(self, img_size, device):
         if self.ema_helper is not None:
             test_backbone = self.ema_helper.ema_copy(self.backbone)
         else:

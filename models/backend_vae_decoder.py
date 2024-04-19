@@ -52,7 +52,7 @@ class VAE_Decoder(nn.Module):
         out = self.final_layer(out)
         return [out, mu, logvar]
 
-    def sample(self, z):
+    def generate(self, z):
         z = self.decoder_input(z).view(-1, 512, 2, 2)
         out = self.decoder(z)
         out = self.final_layer(out)

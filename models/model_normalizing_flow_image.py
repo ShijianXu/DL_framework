@@ -1,17 +1,16 @@
 import torch
 import torch.nn as nn
 
-class Iris_NormalizingFlow(nn.Module):
-    def __init__(self, flows, prior, is_image=False):
+class Image_NormalizingFlow(nn.Module):
+    def __init__(self, flows, prior):
         """
         Args:
             flows: List of nn.Module, each nn.Module is a flow layer
         """
 
-        super(Iris_NormalizingFlow, self).__init__()
+        super(Image_NormalizingFlow, self).__init__()
         self.flows = nn.ModuleList(flows)
         self.prior = prior          # prior distribution for the latent space
-        self.is_image = is_image
         self.num_params_flows = sum(p.num_params for p in self.flows if hasattr(p, 'num_params'))
 
     def encode(self, x):
@@ -27,7 +26,7 @@ class Iris_NormalizingFlow(nn.Module):
     @torch.no_grad()
     def decode(self, z, log_det_J):
         """
-        Decode the latent representation z back to the original input x
+        Decode the latent representation z back to the original image x
         """
         with torch.no_grad():
             for flow in reversed(self.flows):
@@ -38,50 +37,45 @@ class Iris_NormalizingFlow(nn.Module):
         """
         Forward pass through the normalizing flow.
         Args:
-            x: torch.Tensor, the input
+            x: torch.Tensor, the input image
         """
         z, log_det_J = self.encode(x)
         return z, log_det_J
 
     def compute_loss(self, z, log_det_J, criterion):
         """
-        Compute the loss given the log probability of the input.
+        Compute the loss given the log probability of the input image.
         Args:
-            log_p_x: torch.Tensor, the log probability of the input
+            log_p_x: torch.Tensor, the log probability of the input image
             criterion: nn.Module, the loss function to use
         """
         loss = criterion(self.prior, z, log_det_J)
-        return loss
+        return loss    
 
     def process_batch(self, batch, criterion, device):
         """
-        Process a batch of inputs through the normalizing flow.
+        Process a batch of images through the normalizing flow.
         Args:
-            batch: torch.Tensor, a batch of inputs
+            batch: torch.Tensor, a batch of images
             criterion: nn.Module, the loss function to use
             device: str, the device to use
         """
-        inputs = batch[0].to(device)
-        if self.is_image:
-            inputs = inputs.view(inputs.size(0), -1)    # flatten the image
-        z, log_det_J = self(inputs)
+        images = batch[0].to(device)
+        z, log_det_J = self(images)
         loss = self.compute_loss(z, log_det_J, criterion)
         return loss
     
     @torch.no_grad()
-    def generate(self, num_samples, device):
+    def generate(self, img_shape, device):
         """
-        Sample from the prior distribution.
+        Sample images from the prior distribution.
         Args:
-            num_samples: number of samples to sample
+            img_shape: Tuple, the shape of the images to sample
             device: str, the device to use
         """
-        z = self.prior.generate((num_samples,)).to(device)
-        log_det_J = torch.zeros(num_samples, device=device)
-        x, log_det_J = self.decode(z, log_det_J)
-
-        # TODO: it needs to be more general
-        img = x.view(num_samples, 1, 28, 28) if self.is_image else x    # reshape the image
+        z = self.prior.generate(img_shape).to(device)
+        log_det_J = torch.zeros(img_shape[0], device=device)
+        img, log_det_J =  self.decode(z, log_det_J)
         return img
 
     def get_num_params(self):

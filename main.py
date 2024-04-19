@@ -73,7 +73,7 @@ if __name__ == '__main__':
             latent_dim=config.latent_dim,
             ckpt_path=args.ckpt,
         )
-        sampler.sample(sample_num=144)
+        sampler.generate(sample_num=144)
 
     else:
         raise NotImplementedError("Test model not supported!")

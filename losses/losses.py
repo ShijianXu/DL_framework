@@ -101,6 +101,28 @@ def VAE_Loss_fn(recons, input, mu, logvar, kld_weight=1):
 
 #===================================================================
 
+class NICELoss(nn.Module):
+    """
+    Loss for NICE model
+    """
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, prior, z, log_det_J):
+        log_p_z = prior.log_prob(z)
+
+        print(log_p_z.shape, log_det_J.shape)
+        exit(0)
+        log_p_x = log_p_z + log_det_J
+        nll_loss = -log_p_x
+        
+        return {
+            "loss": nll_loss.mean(),
+            "log_likelihood": log_p_x.mean(),
+            "log_det": log_det_J.mean()
+        }
+    
+
 class RealNVPLoss(nn.Module):
     """
     NLL Loss function for RealNVP
