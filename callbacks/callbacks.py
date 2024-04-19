@@ -13,3 +13,12 @@ class CheckpointResumeCallback(Callback):
         else:
             print("=> No ckpt in log dir. Starting training from scratch.")
 
+
+class CheckpointSaveCallback(Callback):
+    def __init__(self, every_n_epochs=None):
+        self.every_n_epochs = every_n_epochs
+
+    def on_epoch_end(self, trainer, epoch):
+        if self.every_n_epochs is not None and (epoch + 1) % self.every_n_epochs == 0:
+            trainer.save_checkpoint(epoch)
+            print("=> Checkpoint saved.")

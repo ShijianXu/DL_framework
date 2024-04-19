@@ -79,38 +79,34 @@ class Trainer(object):
                     if batch_idx % self.print_freq == 0:
                         print("Epoch: {}, batch: {}, train loss: {:.5f}".format(epoch, batch_idx, self.losses_m.avg))
             
-                self._on_epoch_end(epoch)
+                if self.val_dataloader is not None:
+                    valid_loss = self.validate(epoch)
+                    print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
+
+                if self.sample_valid and epoch % self.sample_valid_freq == 0:
+                    sample_tensor = self.model.generate(64, self.device)
+                    self.log_images("Valid/Sample", sample_tensor, epoch)
+
+                if self.scheduler is not None:
+                    if hasattr(self.config, 'scheduler_name') and self.config.scheduler_name == 'ReduceLROnPlateau':
+                        self.scheduler.step(valid_loss)
+                    else:
+                        self.scheduler.step()
+
+                lr = self.optimizer.param_groups[0]["lr"]
+                self.log_scalar("Train/Learning rate", lr, epoch)
+
+                for callback in self.callbacks:
+                    callback.on_epoch_end(self, epoch)
+
                 self.losses_m.reset()
 
             print("=> Traing finished.")
-            self.save_checkpoint(self.epochs)
             self.writer.close()
 
         except KeyboardInterrupt:
             self.save_checkpoint(epoch)
-
-    def _on_epoch_end(self, epoch):
-        if epoch < self.epochs-1:
-            self.save_checkpoint(epoch)
-            
-            if self.val_dataloader is not None:
-                valid_loss = self.validate(epoch)
-                print("Epoch: {}, valid loss: {:.5f}".format(epoch, valid_loss))
-
-            if self.sample_valid and epoch % self.sample_valid_freq == 0:
-                # TODO: fix this compatibility issue
-                # sample_tensor = self.model.generate(self.config.IMG_SIZE, self.device)
-                sample_tensor = self.model.generate(64, self.device)
-                self.log_images("Valid/Sample", sample_tensor, epoch)
-
-            if self.scheduler is not None:
-                if hasattr(self.config, 'scheduler_name') and self.config.scheduler_name == 'ReduceLROnPlateau':
-                    self.scheduler.step(valid_loss)
-                else:
-                    self.scheduler.step()
-
-            lr = self.optimizer.param_groups[0]["lr"]
-            self.log_scalar("Train/Learning rate", lr, epoch)
+            print("=> Traing interrupted. Checkpoint saved.")
 
     def process_batch(self, batch):
         self.model.train()

@@ -13,4 +13,4 @@ class Callback(object):
 
 
 # add all the callbacks here
-from .callbacks import CheckpointResumeCallback
+from .callbacks import CheckpointResumeCallback, CheckpointSaveCallback

@@ -97,8 +97,9 @@ sample_valid_freq = 5   # sample images every 5 epochs
 
 
 # Callbacks part
-from callbacks import CheckpointResumeCallback
+from callbacks import CheckpointResumeCallback, CheckpointSaveCallback
 
 callbacks = [
-    CheckpointResumeCallback(resume=True)
+    CheckpointResumeCallback(resume=True),
+    CheckpointSaveCallback(every_n_epochs=1),
 ]
