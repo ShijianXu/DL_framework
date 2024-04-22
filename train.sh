@@ -1,5 +1,5 @@
 python main.py \
     --mode train \
-    --config configs/normalizing_flow_NICE_mnist.py \
-    --log ./logs/NICE_mnist \
+    --config configs/autoregressive_MADE_mnist.py \
+    --log ./logs/MADE_mnist \
     --print_freq 50

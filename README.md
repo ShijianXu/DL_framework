@@ -21,7 +21,7 @@
 - [ ] GAN
 - Normalizing flow
     - [x] NICE
-    - [ ] MADE
+    - [x] MADE
 
 ### TO Check
 - [ ] contrastive loss
