@@ -35,7 +35,7 @@
 - [ ] AugMix
 - [ ] mixup
 - [ ] linear warmup
-- [ ] save ckpt by metric (save the best model)
+- [x] save ckpt by metric (save the best model)
 
 
 ## How to run
