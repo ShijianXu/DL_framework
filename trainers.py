@@ -23,7 +23,8 @@ class Trainer(object):
         resume=True,
         resume_optimizer=True,
         log_tool='tensorboard',
-        callbacks=None
+        callbacks=None,
+        eval_metric=None
     ):
         self.config = config
         self.model = model
@@ -48,6 +49,7 @@ class Trainer(object):
         self.sample_valid_freq = sample_valid_freq  # epoch frequency to generate images for validation
 
         self.callbacks = callbacks
+        self.eval_metric = eval_metric
 
         # init logger
         self.log_tool = log_tool
@@ -108,7 +110,9 @@ class Trainer(object):
 
                 self.losses_m.reset()
 
-            print("=> Traing finished.")
+            self.save_checkpoint(epoch)         # make sure the latest checkpoint is saved even if no callback is used
+            print("=> Training Finished. Final checkpoint saved.")
+            
             if self.log_tool == 'tensorboard':
                 self.writer.close()
             
@@ -152,12 +156,18 @@ class Trainer(object):
                 target = target.to(self.device)
 
                 output = self.model(source)
-                losses = self.model.compute_loss(source, output, target, self.criterion)
+                losses = self.model.compute_loss(output, target, self.criterion)
                 losses_v.update(losses['loss'].item(), source.size(0))
 
-                # accuracy for classification
-                # PSNR for dense prediction
-                self.model.compute_metric(source, output, target)
+                # compute metrics
+                # source is needed for some generative models
+                self.model.compute_metric(source, output, target, self.eval_metric)
+
+        # check if the metric is the best
+        # update the best metric inside the model and save the checkpoint
+        if self.model.is_best_metric():
+            print("=> Best metric achieved. Saving checkpoint ...")
+            self.save_checkpoint(epoch, filename='checkpoint_best.pth')
 
         self.log_scalar("Valid/Loss", losses_v.avg, epoch)
         self.log_scalar("Valid/Metric", self.model.get_metric_value(), epoch)

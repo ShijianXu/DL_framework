@@ -58,6 +58,7 @@ class ECG_Transformer(nn.Module):
 
         # for test/val metric
         self.metric_m = utils.AverageMeter()
+        self.best_metric = 0
 
     def forward(self, x):
         # x shape: (batch_size, seq_len, channels), B x L x C
@@ -106,6 +107,13 @@ class ECG_Transformer(nn.Module):
 
     def get_metric_value(self):
         return self.metric_m.avg
+    
+    def is_best_metric(self):
+        if self.metric_m.avg > self.best_metric:
+            self.best_metric = self.metric_m.avg
+            return True
+        else:
+            return False
 
     def display_metric_value(self):
         print(f'AUC value: {self.get_metric_value()}')
