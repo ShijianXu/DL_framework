@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import DataLoader
-from datasets.ptbxl_dataset import PTBXL
+from datasets.ptbxl_ecg_text import PTBXL_ECG_Text
 from transformers import BertTokenizer
 from torchvision import transforms
 import models.frozenLM
@@ -37,7 +37,7 @@ print(f"Total model parameters: {model.get_num_params()}")
 #     transforms.ToTensor(),
 # ])
 
-train_dataset = PTBXL(
+train_dataset = PTBXL_ECG_Text(
     path='/home/xu0005/Desktop/ECG_data/ptb-xl/1.0.3/', 
     sampling_rate=100, 
     train=True
@@ -50,7 +50,7 @@ train_dataloader = DataLoader(
 )
 print("Construct train dataset with {} samples".format(len(train_dataset)))
 
-valid_dataset = PTBXL(
+valid_dataset = PTBXL_ECG_Text(
     path='/home/xu0005/Desktop/ECG_data/ptb-xl/1.0.3/', 
     sampling_rate=100, 
     train=False
@@ -78,3 +78,12 @@ scheduler = None
 # does not needed here, just for compatibility
 sample_valid = False
 sample_valid_freq = -1
+
+
+# Callbacks part
+from callbacks import CheckpointResumeCallback, CheckpointSaveCallback
+
+callbacks = [
+    CheckpointResumeCallback(resume=True),
+    CheckpointSaveCallback(every_n_epochs=1),
+]

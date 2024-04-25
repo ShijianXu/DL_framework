@@ -8,6 +8,7 @@
 - [x] SimpleViT
 - [x] MLP-Mixer
 - [x] ConvMixer
+- [x] Transformer (ECG classification)
 
 ### Dense Prediction
 - [x] Noise2Noise (Gaussian noise)

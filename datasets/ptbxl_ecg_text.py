@@ -17,9 +17,9 @@ def load_raw_data(df, sampling_rate, path):
     return data
 
 
-class PTBXL(Dataset):
+class PTBXL_ECG_Text(Dataset):
     """
-    PTB-XL dataset
+    PTB-XL dataset for ECG-Text SSL pretraining
     """
     def __init__(self, path, sampling_rate=100, train=True):
         self.path = path
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     from torch.utils.data import DataLoader
     from tqdm import tqdm
     path = '/home/xu0005/Desktop/ECG_data/ptb-xl/1.0.3/'
-    dataset = PTBXL(path, train=True)
+    dataset = PTBXL_ECG_Text(path, train=True)
     for i in range(10):
         print(dataset[i][1])
 
