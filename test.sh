@@ -1,4 +1,4 @@
 python main.py \
     --mode test \
-    --config configs/cifar_cls_convmixer.py \
-    --ckpt ./logs/cifar_cls_convmixer/checkpoints/checkpoint_latest.pth
+    --config configs/ECG_classification.py \
+    --ckpt ./logs/ECG_CLS_2/checkpoints/checkpoint_best.pth

@@ -10,6 +10,7 @@ class Tester(object):
         dataloader,
         ckpt_path,
         print_freq=400,
+        eval_metric=None
     ):
         self.config = config
         self.model = model
@@ -17,6 +18,7 @@ class Tester(object):
 
         self.print_freq = print_freq
         self.ckpt_path = ckpt_path
+        self.eval_metric = eval_metric
 
         # check device
         if torch.cuda.is_available():
@@ -42,7 +44,7 @@ class Tester(object):
                 inputs = inputs.to(self.device)
                 target = target.to(self.device)
                 output = self.model(inputs)
-                self.model.compute_metric(inputs, output, target)
+                self.model.compute_metric(inputs, output, target, self.eval_metric)
 
         self.model.display_metric_value()
 

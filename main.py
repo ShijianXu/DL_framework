@@ -66,6 +66,7 @@ if __name__ == '__main__':
             model=config.model,
             dataloader=config.test_dataloader,
             ckpt_path=args.ckpt,
+            eval_metric=config.eval_metric if hasattr(config, 'eval_metric') else None,
         )
         tester.test()
 
