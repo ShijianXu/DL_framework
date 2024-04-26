@@ -12,6 +12,7 @@ class ECG_Transformer(nn.Module):
         num_heads:int,
         context_size:int,
         expand_size:int,
+        feature_extractor:nn.Module,
         attention:str="multihead",
         act: nn.Module = nn.GELU,
         embed_drop:float=0.1,
@@ -23,7 +24,8 @@ class ECG_Transformer(nn.Module):
         bias:bool=True,
     ):
         super().__init__()
-        self.token_embed = nn.Linear(input_size, hidden_size)
+
+        self.feature_extractor = feature_extractor
         self.pos_embed = nn.Embedding(context_size, hidden_size)
         self.embed_drop = nn.Dropout(embed_drop)
 
@@ -61,8 +63,11 @@ class ECG_Transformer(nn.Module):
         self.best_metric = 0
 
     def forward(self, x):
-        # x shape: (batch_size, seq_len, channels), B x L x C
-        x = self.token_embed(x)                         # B x L x hidden_size
+        # x shape: (batch_size, seq_len, channels), B x S x C
+        if isinstance(self.feature_extractor, nn.Conv1d):
+            x = self.feature_extractor(x.transpose(1, 2)).transpose(1, 2)
+        else:
+            x = self.feature_extractor(x)                   # B x L x hidden_size
 
         pos = self.pos_embed(self.pos[:x.shape[1]])     # L x hidden_size
 
@@ -130,25 +135,32 @@ class ECG_Transformer(nn.Module):
 
 
 if __name__ == "__main__":
-    model = ECG_Transformer(
-        num_classes=2,
-        input_size=12,
-        num_layers=3,
-        hidden_size=256,
-        num_heads=8,
-        context_size=5000,
-        expand_size=512,
-        attention="multihead",
-        act=nn.GELU,
-        embed_drop=0.1,
-        attn_drop=0.1,
-        out_drop=0.1,
-        ffn_drop=0.1,
-        head_norm=True,
-        head_bias=True,
-        bias=True
+    feature_extractor = nn.Conv1d(
+        in_channels=12, 
+        out_channels=256, 
+        kernel_size=3, 
+        stride=2
     )
-    model.to('cuda')
-    x = torch.randn(32, 1000, 12).to('cuda')
-    y = model(x)
+
+    # model = ECG_Transformer(
+    #     num_classes=2,
+    #     input_size=12,
+    #     num_layers=3,
+    #     hidden_size=256,
+    #     num_heads=8,
+    #     context_size=5000,
+    #     expand_size=512,
+    #     feature_extractor=feature_extractor,
+    #     attention="multihead",
+    #     act=nn.GELU,
+    #     embed_drop=0.1,
+    #     attn_drop=0.1,
+    #     out_drop=0.1,
+    #     ffn_drop=0.1,
+    #     head_norm=True,
+    #     head_bias=True,
+    #     bias=True
+    # )
+    x = torch.randn(32, 1000, 12)
+    y = feature_extractor(x.transpose(1, 2)).transpose(1, 2)
     print(y.shape)

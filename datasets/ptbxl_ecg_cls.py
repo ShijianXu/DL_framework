@@ -5,6 +5,8 @@ import numpy as np
 import wfdb
 import pickle
 import ast
+from tqdm import tqdm
+from scipy.signal import resample
 from torch.utils.data import Dataset
 from sklearn.preprocessing import StandardScaler, MultiLabelBinarizer
 
@@ -34,6 +36,36 @@ def load_raw_data_ptbxl(df, sampling_rate, path):
             data = [wfdb.rdsamp(path+f) for f in tqdm(df.filename_hr)]
             data = np.array([signal for signal, meta in data])
             pickle.dump(data, open(path+'raw500.npy', 'wb'), protocol=4)
+    elif sampling_rate < 500:
+        if os.path.exists(path + f'raw{sampling_rate}.npy'):
+            data = np.load(path + f'raw{sampling_rate}.npy', allow_pickle=True)
+        else:
+            # load the data at 500Hz first
+            if os.path.exists(path + 'raw500.npy'):
+                data = np.load(path + 'raw500.npy', allow_pickle=True)
+            else:
+                data = [wfdb.rdsamp(path + f) for f in tqdm(df.filename_hr)]
+                data = np.array([signal for signal, meta in data])
+                pickle.dump(data, open(path + 'raw500.npy', 'wb'), protocol=4)
+        
+            # downsample the data to the target sampling rate
+            downsampled_data = []
+            for signal in tqdm(data, desc=f'Downsampling to {sampling_rate}Hz'):
+                # Calculate the downsampling factor
+                downsampling_factor = 500 / sampling_rate
+            
+                # Resample the signal
+                downsampled_signal = resample(signal, int(len(signal) / downsampling_factor))
+            
+                # Append the downsampled signal to the list
+                downsampled_data.append(downsampled_signal)
+        
+            # Convert the list of downsampled signals to a NumPy array
+            data = np.array(downsampled_data)
+        
+            # Optionally, you can save the downsampled data for future use
+            np.save(path + f'raw{sampling_rate}.npy', data)
+
     return data
 
 
@@ -298,7 +330,7 @@ if __name__ == "__main__":
     from tqdm import tqdm
 
     TASK = "form"     # 'diagnostic', 'subdiagnostic', 'superdiagnostic', 'form', 'rhythm', 'all'
-    SAMPLING_RATE = 100
+    SAMPLING_RATE = 200
 
     dataset = PTBXL_CLS(
         path="/home/xu0005/Desktop/ECG_data/ptb-xl/1.0.3/",

@@ -13,7 +13,7 @@ ECG_CHANNELS = 12
 NUM_LAYERS = 1
 HIDDEN_SIZE = 64
 NUM_HEADS = 4
-CONTEXT_SIZE = 1000
+CONTEXT_SIZE = 2000
 EXPAND_SIZE = 128
 ATTENTION = "multihead" # "multihead" or "causal" or "cross", etc.
 ACTIVATE = nn.GELU           # activation function
@@ -21,6 +21,15 @@ ACTIVATE = nn.GELU           # activation function
 # evaluation metric, can be predefined or customized or not provided
 # depending on the model and the task
 eval_metric = MultilabelAUROC(num_labels=NUM_CLASSES, average="macro", thresholds=None)
+
+
+# feature_extractor = nn.Linear(ECG_CHANNELS, HIDDEN_SIZE)
+feature_extractor = nn.Conv1d(
+    in_channels=ECG_CHANNELS, 
+    out_channels=HIDDEN_SIZE, 
+    kernel_size=3, 
+    stride=2
+)
 
 model_config = {
     "num_classes": NUM_CLASSES,
@@ -32,6 +41,7 @@ model_config = {
     "expand_size": EXPAND_SIZE,
     "attention": ATTENTION,
     "act": ACTIVATE,
+    "feature_extractor": feature_extractor,
 }
 model = ECG_Transformer(**model_config)
 print(f"Total model parameters: {model.get_num_params()}")
@@ -39,7 +49,7 @@ print(f"Total model parameters: {model.get_num_params()}")
 
 # Data part
 TASK = "superdiagnostic"     # 'diagnostic', 'subdiagnostic', 'superdiagnostic', 'form', 'rhythm', 'all'
-SAMPLING_RATE = 100
+SAMPLING_RATE = 200
 DATA_PATH = "/home/xu0005/Desktop/ECG_data/ptb-xl/1.0.3/"
 
 train_dataset = PTBXL_CLS(

@@ -173,6 +173,7 @@ class CausalAttention(nn.Module):
         x = self.proj_drop(x)                           # dropout
         return x
 
+
 class CrossAttention(nn.Module):
     def __init__(self,
                  hidden_size: int,
@@ -315,6 +316,7 @@ class TransformerBlock(nn.Module):
 
         return x
     
+
 class PositionalEncoding(nn.Module):
     def __init__(self,
         context_size: int,
