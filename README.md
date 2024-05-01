@@ -23,6 +23,7 @@
 - Normalizing flow
     - [x] NICE
     - [x] MADE
+- [ ] ECG_ST_MEM
 
 ### TO Check
 - [ ] contrastive loss

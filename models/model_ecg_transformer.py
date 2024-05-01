@@ -64,10 +64,14 @@ class ECG_Transformer(nn.Module):
 
     def forward(self, x):
         # x shape: (batch_size, seq_len, channels), B x S x C
-        if isinstance(self.feature_extractor, nn.Conv1d):
-            x = self.feature_extractor(x.transpose(1, 2)).transpose(1, 2)
+        # the final input length L does not need to be the same as the input sequence length S
+        # convolutional may reduce the length, and the transformer layers can handle variable length
+        # shorter lengths will cost less computation in the attention mechanism
+        if isinstance(self.feature_extractor, nn.Linear):
+            x = self.feature_extractor(x)               # B x L x hidden_size
         else:
-            x = self.feature_extractor(x)                   # B x L x hidden_size
+            x = self.feature_extractor(x.transpose(1, 2)).transpose(1, 2)
+
 
         pos = self.pos_embed(self.pos[:x.shape[1]])     # L x hidden_size
 

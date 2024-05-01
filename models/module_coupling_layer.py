@@ -37,29 +37,6 @@ class AffineCouplingLayer(nn.Module):
         self.in_channels = in_channels
         self.register_buffer('mask', mask)
 
-    # def create_mask(self, mask_type, invert=False):
-    #     """
-    #     Create a mask that determines which elements of the input are transformed.
-    #     Args:
-    #         mask_type: str, the type of mask to create. 'checkerboard' or 'channel_wise'
-    #         invert: bool, alternatively mask the other half of the input
-    #     """
-    #     mask = torch.zeros(self.in_channels, dtype=torch.float32)
-    #     if mask_type == 'checkerboard':
-    #         mask[::2] = 1
-    #         if invert:
-    #             mask = 1 - mask
-
-    #     elif mask_type == 'channel_wise':
-    #         mask[::self.in_channels // 2] = 1
-    #         mask = mask.view(1, self.in_channels, 1, 1)
-    #         if invert:
-    #             mask = 1 - mask
-
-    #     else:
-    #         raise ValueError('Invalid mask type')
-    #     return mask
-
     def forward(self, x, log_det_J, orig_x=None):
         """
         orig_x is only needed in VarDeq.
@@ -99,6 +76,7 @@ class AffineCouplingLayer(nn.Module):
         return x, log_det_J
 
 
+#===================================================================
 
 class IrisCouplingLayer(nn.Module):
     def __init__(
