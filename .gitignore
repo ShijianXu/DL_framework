@@ -2,6 +2,7 @@
 /logs
 /output
 /wandb
+/Jax_test
 __pycache__/
 */__pycache__/
 .DS_Store
