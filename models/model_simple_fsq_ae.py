@@ -41,10 +41,7 @@ class SimpleFSQAutoEncoder(nn.Module):
     
     def compute_loss(self, out, x, criterion):
         """
-        Compute the loss given the log probability of the input image.
-        Args:
-            log_p_x: torch.Tensor, the log probability of the input image
-            criterion: nn.Module, the loss function to use
+        Compute the L1 loss.
         """
         loss = criterion(out, x)
         return loss
