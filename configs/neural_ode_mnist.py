@@ -62,6 +62,7 @@ test_dataloader = DataLoader(
     num_workers=2,
     drop_last=True
 )
+test_require_gt = True      # whether durign test requires ground truth
 print("Construct test dataset with {} samples".format(len(test_dataset)))
 
 
