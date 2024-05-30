@@ -1,5 +1,5 @@
 python main.py \
     --mode train \
-    --config configs/autoencoder_fsq_mnist.py \
-    --log ./logs/FSQ_AE_MNIST \
+    --config configs/neural_ode_mnist.py \
+    --log ./logs/NeuralODE_MNIST \
     --print_freq 50

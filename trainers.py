@@ -49,6 +49,8 @@ class Trainer(object):
         self.sample_valid_freq = sample_valid_freq  # epoch frequency to generate images for validation
 
         self.callbacks = callbacks
+        assert self.callbacks is not None, "Basic callbacks must be provided."
+
         self.eval_metric = eval_metric
 
         # init logger
