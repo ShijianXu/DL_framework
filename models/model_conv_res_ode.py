@@ -186,7 +186,6 @@ class ConvResODE(nn.Module):
         logits = self(x)
         loss = self.compute_loss(logits, target, criterion)
 
-
         # compute forward number of function evaluations
         if self.is_odenet:
             nfe_forward = self.feature_layers[0].nfe
