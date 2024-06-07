@@ -239,6 +239,17 @@ class ContrastiveLoss2(nn.Module):
         }
     
 
+class NLLLoss_CNF(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, logp_x):
+        loss = -logp_x.mean(0)
+        return {
+            "loss": loss
+        }
+    
+
 if __name__ == "__main__":
     import time
     start_time = time.time()
