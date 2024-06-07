@@ -105,7 +105,7 @@ class SimpleCNF(nn.Module):
         self.metric_m = utils.AverageMeter()
         self.best_metric = 0
 
-    def forward(self, x, logp_diff_t1, device):
+    def forward(self, x, logp_diff_t1, device, return_last=True):
         z_t, logp_diff_t = odeint(
             self.func,
             (x, logp_diff_t1),
@@ -115,8 +115,11 @@ class SimpleCNF(nn.Module):
             method='dopri5',
         )
 
-        z_t0, logp_diff_t0 = z_t[-1], logp_diff_t[-1]
-        return z_t0, logp_diff_t0
+        if return_last:
+            z_t0, logp_diff_t0 = z_t[-1], logp_diff_t[-1]
+            return z_t0, logp_diff_t0
+        else:
+            return z_t, logp_diff_t
 
     def compute_loss(self, logp_x, criterion):
         # loss = -logp_x.mean(0)

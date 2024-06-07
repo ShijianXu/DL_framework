@@ -36,8 +36,7 @@ num_epochs = 1
 learning_rate = 1e-3
 
 loss = NLLLoss_CNF()
-optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9)
-
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 # Callbacks part
 from callbacks import CheckpointResumeCallback, CheckpointSaveCallback, TrainingTimerCallback

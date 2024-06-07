@@ -21,10 +21,3 @@ class CircleDataset(data.Dataset):
 if __name__ == "__main__":
     dataset = CircleDataset(num_samples=512*1000)
     print(len(dataset))
-
-    cnt = 0
-    for i in range(len(dataset)):
-        cnt += 1
-        if cnt > 5:
-            break
-        print(dataset[i])
