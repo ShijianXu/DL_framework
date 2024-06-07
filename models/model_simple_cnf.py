@@ -129,7 +129,7 @@ class SimpleCNF(nn.Module):
 
     def process_batch(self, batch, criterion, device):
         x = batch.to(device)
-        logp_diff_t1 = torch.zeros(x.shape[0], 1).to(device)
+        logp_diff_t1 = torch.zeros(x.shape[0], 1).type(torch.float32).to(device)
 
         z_t0, logp_diff_t0 = self.forward(x, logp_diff_t1, device)
         
