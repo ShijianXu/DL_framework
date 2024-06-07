@@ -122,6 +122,9 @@ class Trainer(object):
             self.save_checkpoint(epoch)
             print("=> Traing interrupted. Checkpoint saved.")
 
+        for callback in self.callbacks:
+            callback.on_train_end(self)
+
     def process_batch(self, batch):
         self.model.train()
         self.optimizer.zero_grad()
