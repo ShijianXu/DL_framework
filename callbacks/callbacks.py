@@ -1,5 +1,6 @@
 import os
 from . import Callback
+import time
 
 class CheckpointResumeCallback(Callback):
     def __init__(self, resume):
@@ -22,3 +23,19 @@ class CheckpointSaveCallback(Callback):
         if self.every_n_epochs is not None and (epoch + 1) % self.every_n_epochs == 0:
             trainer.save_checkpoint(epoch)
             print("=> Checkpoint saved.")
+
+
+class TrainingTimerCallback(Callback):
+    def __init__(self):
+        super().__init__()
+        self.start_time = 0
+
+    def on_train_begin(self, trainer):
+        # This method is called when the training starts.
+        self.start_time = time.time()
+        print("=> Training started...")
+
+    def on_train_end(self, trainer):
+        # This method is called when the training ends.
+        time_elapsed = time.time() - self.start_time
+        print('Total time elapsed: {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
