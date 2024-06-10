@@ -244,7 +244,7 @@ class NLLLoss_CNF(nn.Module):
         super().__init__()
 
     def forward(self, logp_x):
-        loss = -logp_x.mean(0)
+        loss = -logp_x.mean()
         return {
             "loss": loss
         }
