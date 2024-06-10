@@ -132,6 +132,10 @@ class ODEfunc(nn.Module):
         z = x[0]
         batchsize = z.shape[0]
 
+        # Sample and fix the noise.
+        if self.hutchinson_trace:
+            e = sample_rademacher_like(z).to(z)
+
         with torch.set_grad_enabled(True):
             z.requires_grad_(True)
             t.requires_grad_(True)
@@ -139,7 +143,6 @@ class ODEfunc(nn.Module):
             dz_dt = self.get_z_dot(t, z)
 
             if self.hutchinson_trace:
-                e = sample_rademacher_like(z).to(z)
                 tr_df_dz = hutchinson_approx(dz_dt, z, e)
                 dlogp_z_dt = -tr_df_dz.view(batchsize, 1)
             else:

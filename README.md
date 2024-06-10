@@ -20,14 +20,19 @@
 - [x] NCSN v2 (The EMA resume may not correctly handled)
 - [ ] More complexed diffusion models
 - [ ] GAN
-- Normalizing flow
-    - [x] NICE
-    - [x] MADE
+
+### Normalizing flow
+- [x] NICE
+- [x] MADE
+- [x] Neural ODE for MNIST
+- [x] Naive Continuous NF
+- [x] FFJORD
+
 - [ ] ECG_ST_MEM
+
 
 ### TO Check
 - [ ] contrastive loss
-
 
 
 ## Other Components
