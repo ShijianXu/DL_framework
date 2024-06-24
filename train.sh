@@ -1,5 +1,5 @@
 python main.py \
     --mode train \
-    --config configs/ffjord_mnist.py \
-    --log ./logs/FFJORD_MNIST \
+    --config configs/ECG_Text_SSL.py \
+    --log ./logs/ECG_TEXT \
     --print_freq 50

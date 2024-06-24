@@ -25,7 +25,7 @@ class BasicBlock1D(nn.Module):
         out = self.bn2(out)
 
         if self.downsample is not None:
-            residual = self.Downsample(x)
+            residual = self.downsample(x)
 
         out += residual
         out = self.relu(out)
@@ -94,6 +94,6 @@ def resnet18_1d(in_channels, block=BasicBlock1D, layers=[2, 2, 2, 2], projection
 
 if __name__ == "__main__":
     
-    model = resnet18_1d(12)
+    model = resnet18_1d(12, projection_size=1024)
     x = torch.randn(32, 1000, 12)
     print(model(x).shape)           # torch.Size([32, 768])
